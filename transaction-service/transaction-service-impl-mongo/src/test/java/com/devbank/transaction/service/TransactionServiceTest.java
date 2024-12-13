@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 
 public class TransactionServiceTest {
 
@@ -23,8 +24,8 @@ public class TransactionServiceTest {
 
     @Test
     public void testTransfer_Success() {
-        // Mock AccountService'ten yeterli bakiye döndür
-        Mockito.when(accountService.getBalance("123456")).thenReturn(200.0);
+        // Mock AccountService'ten yeterli bakiye döndür ve kullanıcı doğrulama kontrolü
+        Mockito.when(accountService.getBalance(eq("123456"), eq("testUser"))).thenReturn(200.0);
 
         // Mock TransactionRepository'de kaydedilecek TransactionDocument'i döndür
         Mockito.when(transactionRepository.save(Mockito.any(TransactionDocument.class)))
@@ -37,7 +38,7 @@ public class TransactionServiceTest {
         transactionDTO.setAmount(100.0);
 
         // Transfer çağrısını yap
-        TransactionDocument result = transactionService.transfer(transactionDTO);
+        TransactionDocument result = transactionService.transfer(transactionDTO, "testUser");
 
         // Sonuçları doğrula
         assertNotNull(result);
@@ -50,7 +51,7 @@ public class TransactionServiceTest {
     @Test
     public void testTransfer_InsufficientBalance() {
         // Mock bir AccountService oluştur ve yetersiz bakiye döndür
-        Mockito.when(accountService.getBalance("123456")).thenReturn(50.0);
+        Mockito.when(accountService.getBalance(eq("123456"), eq("testUser"))).thenReturn(50.0);
 
         // TransactionDTO oluştur
         TransactionDTO transactionDTO = new TransactionDTO();
@@ -60,7 +61,7 @@ public class TransactionServiceTest {
 
         // İstisnayı doğrula
         CustomException exception = assertThrows(CustomException.class, () -> {
-            transactionService.transfer(transactionDTO);
+            transactionService.transfer(transactionDTO, "testUser");
         });
 
         // Hata mesajını doğrula
@@ -70,7 +71,7 @@ public class TransactionServiceTest {
     @Test
     public void testTransfer_SameAccount() {
         // Mock AccountService
-        Mockito.when(accountService.getBalance("123456")).thenReturn(200.0);
+        Mockito.when(accountService.getBalance(eq("123456"), eq("testUser"))).thenReturn(200.0);
 
         // TransactionDTO oluştur
         TransactionDTO transactionDTO = new TransactionDTO();
@@ -80,10 +81,11 @@ public class TransactionServiceTest {
 
         // İstisna kontrolü
         CustomException exception = assertThrows(CustomException.class, () -> {
-            transactionService.transfer(transactionDTO);
+            transactionService.transfer(transactionDTO, "testUser");
         });
 
         // Hata mesajını doğrula
         assertEquals("Cannot transfer to the same account", exception.getMessage());
     }
+
 }

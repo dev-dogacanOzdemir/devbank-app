@@ -61,6 +61,10 @@ public class AccountService {
         return account;
     }
 
+    public AccountDocument getAccountByNumber(String accountNumber) {
+        return accountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new CustomException("Account not found", HttpStatus.NOT_FOUND));
+    }
 
     public double getBalance(String accountId, String username) {
         return getAccountById(accountId, username).getBalance();

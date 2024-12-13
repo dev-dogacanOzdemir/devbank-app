@@ -50,6 +50,19 @@ public class TransactionService {
         return transactionRepository.save(transaction);
     }
 
+    public TransactionDocument transfer(TransactionDTO transactionDTO) {
+
+        // Normal transfer mantığı
+        TransactionDocument transaction = new TransactionDocument();
+        transaction.setFromAccount(transactionDTO.getFromAccount());
+        transaction.setToAccount(transactionDTO.getToAccount());
+        transaction.setAmount(transactionDTO.getAmount());
+        transaction.setTransactionType(TransactionType.TRANSFER);
+        transaction.setTimestamp(LocalDateTime.now());
+
+        return transactionRepository.save(transaction);
+    }
+
     public TransactionDocument deposit(String accountNumber, double amount) {
         if (amount <= 0) {
             throw new CustomException("Deposit amount must be greater than zero", HttpStatus.BAD_REQUEST);

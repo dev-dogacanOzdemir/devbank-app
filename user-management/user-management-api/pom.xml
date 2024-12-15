@@ -8,10 +8,11 @@
     </parent>
     <artifactId>user-management-api</artifactId>
     <dependencies>
+        <!-- Java Validation API (Optional, for input validation) -->
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>3.0.2</version>
         </dependency>
     </dependencies>
 </project>

@@ -1,8 +1,7 @@
 package com.devbank.user.management.api.enums;
 
 public enum Role {
-    ADMIN,
-    USER,
+    CUSTOMER,
     EMPLOYEE,
-    BUSINESS_USER
+    ADMIN
 }

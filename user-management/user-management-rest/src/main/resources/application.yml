@@ -1,0 +1,8 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: user-management-rest
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/user_management

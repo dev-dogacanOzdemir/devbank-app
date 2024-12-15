@@ -12,13 +12,18 @@
     <modules>
         <module>user-management-api</module>
         <module>user-management-impl-mongo</module>
-        <module>user-management-endpoint</module>
+        <module>user-management-rest</module>
     </modules>
     <dependencies>
         <!-- Ortak bağımlılıklar buraya eklenebilir -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

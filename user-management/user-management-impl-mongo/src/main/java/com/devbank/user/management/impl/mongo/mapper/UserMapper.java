@@ -1,14 +1,14 @@
 package com.devbank.user.management.impl.mongo.mapper;
 
 import com.devbank.user.management.api.DTO.UserDTO;
-import com.devbank.user.management.impl.mongo.model.User;
+import com.devbank.user.management.impl.mongo.document.UserDocument;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserMapper {
 
 
-    public UserDTO toDto(User user) {
+    public UserDTO toDto(UserDocument user) {
         if (user == null) {
             return null;
         }
@@ -20,11 +20,11 @@ public class UserMapper {
         return dto;
     }
 
-    public User toEntity(UserDTO dto) {
+    public UserDocument toEntity(UserDTO dto) {
         if (dto == null) {
             return null;
         }
-        User user = new User();
+        UserDocument user = new UserDocument();
         user.setId(dto.getId());
         user.setName(dto.getName());
         user.setSurname(dto.getSurname());

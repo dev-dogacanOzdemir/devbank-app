@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: account-rest
+  data:
+    mongodb:
+    host: localhost
+    port: 27017
+    database: devbank
+server:
+  port: 8082

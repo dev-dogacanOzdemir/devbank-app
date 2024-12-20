@@ -4,7 +4,7 @@ import com.devbank.error.management.exception.UserNotFoundException;
 import com.devbank.user.management.api.DTO.UserDTO;
 import com.devbank.user.management.impl.mongo.mapper.UserMapper;
 import com.devbank.user.management.api.service.UserService;
-import com.devbank.user.management.impl.mongo.model.User;
+import com.devbank.user.management.impl.mongo.document.UserDocument;
 import com.devbank.user.management.impl.mongo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO registerUser(UserDTO userDTO){
         // Yeni kullanıcı oluştur.
-        User user = new User();
+        UserDocument user = new UserDocument();
         user.setName(userDTO.getName());
         user.setSurname(userDTO.getSurname());
         user.setTcNumber(userDTO.getTcNumber());
@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
         user.setPasswordHash(passwordEncoder.encode(userDTO.getPassword())); // Şifreyi hashle
         user.setCreatedAt(new Date());
 
-        User savedUser = userRepository.save(user);
+        UserDocument savedUser = userRepository.save(user);
 
         userDTO.setId(savedUser.getId());
         return userDTO;
@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<UserDTO> authenticateUser(String tcNumber, String phoneNumber, String password) {
         // Kullanıcıyı kimlik bilgilerine göre doğrula
-        Optional<User> user = userRepository.findByTcNumberAndPhoneNumber(tcNumber, phoneNumber);
+        Optional<UserDocument> user = userRepository.findByTcNumberAndPhoneNumber(tcNumber, phoneNumber);
         if (user.isPresent() && passwordEncoder.matches(password, user.get().getPasswordHash())) {
             UserDTO dto = new UserDTO();
             dto.setId(user.get().getId());
@@ -79,20 +79,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO updateUser(Long id, UserDTO userDTO) {
-        User user = userRepository.findById(id)
+        UserDocument user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("Kullanıcı bulunamadı: " + id));
 
         user.setName(userDTO.getName());
         user.setSurname(userDTO.getSurname());
         user.setPhoneNumber(userDTO.getPhoneNumber());
 
-        User updatedUser = userRepository.save(user);
+        UserDocument updatedUser = userRepository.save(user);
         return userMapper.toDto(updatedUser);
     }
 
     @Override
     public boolean requestPasswordReset(String tcNumber, String phoneNumber) {
-        Optional<User> userOptional = userRepository.findByTcNumberAndPhoneNumber(tcNumber, phoneNumber);
+        Optional<UserDocument> userOptional = userRepository.findByTcNumberAndPhoneNumber(tcNumber, phoneNumber);
         if (userOptional.isPresent()) {
             // TODO: Şifre sıfırlama işlemi için gerekli işlemler burada tanımlacak.
             // Örneğin: Kullanıcıya SMS veya e-posta ile doğrulama kodu gönderilebilri.
@@ -103,9 +103,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean resetPassword(String tcNumber, String newPassword) {
-        Optional<User> userOptional = userRepository.findByTcNumber(tcNumber);
+        Optional<UserDocument> userOptional = userRepository.findByTcNumber(tcNumber);
         if (userOptional.isPresent()) {
-            User user = userOptional.get();
+            UserDocument user = userOptional.get();
             user.setPasswordHash(passwordEncoder.encode(newPassword)); // Yeni şifreyi hashle ve kaydet
             userRepository.save(user);
             return true;

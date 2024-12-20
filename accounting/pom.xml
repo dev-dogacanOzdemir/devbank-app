@@ -15,8 +15,8 @@
     <name>Accounting Module</name>
 
     <modules>
-        <module>account-api</module>
-        <module>account-impl-mongo</module>
-        <module>account-endpoint</module>
+        <module>accounting-api</module>
+        <module>accounting-impl-mongo</module>
+        <module>accounting-rest</module>
     </modules>
 </project>

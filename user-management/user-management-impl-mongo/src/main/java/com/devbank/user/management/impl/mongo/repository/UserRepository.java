@@ -1,17 +1,17 @@
 package com.devbank.user.management.impl.mongo.repository;
 
-import com.devbank.user.management.impl.mongo.model.User;
+import com.devbank.user.management.impl.mongo.document.UserDocument;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
 
-public interface UserRepository extends MongoRepository<User, Long> {
+public interface UserRepository extends MongoRepository<UserDocument, Long> {
 
     // T.C. kimlik numarasına göre kullanıcı bulma
-    Optional<User> findByTcNumber(String tcNumber);
+    Optional<UserDocument> findByTcNumber(String tcNumber);
 
     // T.C. kimlik numarası ve telefon numarasına göre kullanıcı bulma
-    Optional<User> findByTcNumberAndPhoneNumber(String tcNumber, String phoneNumber);
+    Optional<UserDocument> findByTcNumberAndPhoneNumber(String tcNumber, String phoneNumber);
 
-    Optional<User> findById(Long id);
+    Optional<UserDocument> findById(Long id);
 }

@@ -25,10 +25,11 @@
 	<modules>
 
 		<module>accounting</module>
-        <module>transaction-service</module>
         <module>error-management</module>
 		<module>user-management</module>
-	</modules>
+        <module>transfer</module>
+        <module>currency-gold</module>
+    </modules>
 
 	<dependencyManagement>
 		<dependencies>

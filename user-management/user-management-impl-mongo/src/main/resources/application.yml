@@ -1,7 +1,0 @@
-spring:
-  data:
-    mongodb:
-      uri: mongodb://localhost:27017/user_management
-      database: user_management
-  application:
-    name: user-management-impl-mongo

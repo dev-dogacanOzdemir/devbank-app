@@ -10,11 +10,6 @@
     <dependencies>
         <dependency>
             <groupId>com.devbank</groupId>
-            <artifactId>user-management-api</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.devbank</groupId>
             <artifactId>user-management-impl-mongo</artifactId>
             <version>1.0.0</version>
         </dependency>

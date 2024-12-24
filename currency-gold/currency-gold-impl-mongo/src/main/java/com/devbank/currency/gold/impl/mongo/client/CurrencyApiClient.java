@@ -12,7 +12,7 @@ import java.util.Map;
 @Component
 public class CurrencyApiClient {
 
-    private static final String API_URL = "https://v6.exchangerate-api.com/v6/2470887815bae03aaed2d2b6/latest/TRY";
+    private static final String API_URL = "https://v6.exchangerate-api.com/v6/2470887815bae03aaed2d2b6/latest/USD";
     private final RestTemplate restTemplate;
 
     public CurrencyApiClient(RestTemplate restTemplate) {

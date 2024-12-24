@@ -6,3 +6,5 @@ spring:
       uri: mongodb://localhost:27017/devbank
       database: devbank
       auto-index-creation: true
+server:
+  port: 2002

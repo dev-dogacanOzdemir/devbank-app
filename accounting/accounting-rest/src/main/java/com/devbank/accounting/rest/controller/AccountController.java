@@ -14,6 +14,8 @@ import java.util.List;
 @RequestMapping("/api/accounts")
 @RequiredArgsConstructor
 public class AccountController {
+
+
     private final AccountService accountService;
 
     // Yeni hesap oluşturma

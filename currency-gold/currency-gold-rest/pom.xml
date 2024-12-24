@@ -27,11 +27,6 @@
             <version>1.0.0</version>
         </dependency>
         <dependency>
-            <groupId>com.devbank</groupId>
-            <artifactId>currency-gold-impl-mongo</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>

@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: currency-gold-service
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/devbank
+      database: devbank
+      auto-index-creation: true
+server:
+  port: 2003
+collectapi:
+  apiKey: "1wT2N6Rafmq2J8EKzovyhM:1y9EcNpQsjAclQDrExQCSP"
+  url: "https://api.collectapi.com/economy/goldPrice"

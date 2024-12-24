@@ -1,10 +1,10 @@
 spring:
   application:
-    name: account-rest
+    name: accounting-service
   data:
     mongodb:
-    host: localhost
-    port: 27017
-    database: devbank
+      uri: mongodb://localhost:27017/devbank
+      database: devbank
+      auto-index-creation: true
 server:
-  port: 8082
+  port: 2002

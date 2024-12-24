@@ -82,4 +82,12 @@ public class AccountServiceImpl implements AccountService {
         accountRepository.deleteById(accountId);
     }
 
+    public void updateAccountBalance(Long accountId, Double newBalance) {
+        AccountDocument account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new AccountNotFoundException("Account not found"));
+
+        account.setBalance(newBalance);
+        accountRepository.save(account); // Yeni bakiye güncellemesi
+    }
+
 }

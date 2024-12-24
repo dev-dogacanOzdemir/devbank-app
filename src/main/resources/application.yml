@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: devbank-app
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/devbank
+      database: devbank
+      auto-index-creation: true
+
+logging:
+  level:
+    org.springframework.data.mongodb: DEBUG

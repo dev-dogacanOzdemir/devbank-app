@@ -13,7 +13,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document( collection = "accounts")
+@Document(collection = "accounts")
 public class AccountDocument {
 
     @Id

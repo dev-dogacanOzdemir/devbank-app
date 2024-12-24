@@ -1,9 +1,6 @@
 package com.devbank.error.management.handler;
 
-import com.devbank.error.management.exception.AccountNotFoundException;
-import com.devbank.error.management.exception.CustomException;
-import com.devbank.error.management.exception.ErrorDetails;
-import com.devbank.error.management.exception.UserNotFoundException;
+import com.devbank.error.management.exception.*;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -74,4 +71,16 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDetails);
     }
+
+    @ExceptionHandler(InsufficientBalanceException.class)
+    public ResponseEntity<ErrorDetails> handleInsufficientBalanceException(InsufficientBalanceException ex) {
+        ErrorDetails errorDetails = new ErrorDetails(
+                new Date(),
+                "INSUFFICIENT_BALANCE",
+                ex.getMessage(),
+                "INSUFFICIENT_BALANCE"
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDetails);
+    }
+
 }

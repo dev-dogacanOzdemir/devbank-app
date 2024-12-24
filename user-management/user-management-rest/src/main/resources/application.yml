@@ -1,8 +1,10 @@
-server:
-  port: 8080
 spring:
   application:
-    name: user-management-rest
+    name: user-management-service
   data:
     mongodb:
-      uri: mongodb://localhost:27017/user_management
+      uri: mongodb://localhost:27017/devbank
+      database: devbank
+      auto-index-creation: true
+server:
+  port: 2001

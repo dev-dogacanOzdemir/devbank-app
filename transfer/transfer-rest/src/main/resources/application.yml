@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: transfer-service
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/devbank
+      database: devbank
+      auto-index-creation: true

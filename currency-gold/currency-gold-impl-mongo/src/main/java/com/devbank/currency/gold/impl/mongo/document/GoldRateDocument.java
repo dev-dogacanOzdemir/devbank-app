@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -19,13 +18,9 @@ import java.time.LocalDateTime;
 public class GoldRateDocument {
 
     @Id
-    private Long id;
-
+    private String id;
     private GoldType goldType;
-
-    private BigDecimal buyRate;
-
-    private BigDecimal sellRate;
-
+    private double sellPrice;
+    private double buyPrice;
     private LocalDateTime updatedAt;
 }

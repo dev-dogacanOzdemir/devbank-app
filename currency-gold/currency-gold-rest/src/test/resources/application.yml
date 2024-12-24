@@ -1,4 +1,5 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017/test-devbank
+      uri: mongodb://localhost:27017/devbank
+      database: devbank

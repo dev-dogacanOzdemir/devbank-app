@@ -8,7 +8,6 @@ import com.devbank.currency.gold.impl.mongo.repository.GoldRateRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Component
@@ -31,7 +30,13 @@ public class CurrencyGoldDataLoader implements CommandLineRunner {
         }
 
         if (goldRateRepository.count() == 0) {
-            GoldRateDocument goldRate = new GoldRateDocument(1L, GoldType.GRAM, BigDecimal.valueOf(1675.50), BigDecimal.valueOf(1680.00), LocalDateTime.now());
+            GoldRateDocument goldRate = new GoldRateDocument(
+                    null,
+                    GoldType.GRAM,
+                    1680.00,
+                    1675.50,
+                    LocalDateTime.now()
+            );
             goldRateRepository.save(goldRate);
             System.out.println("Gold rate initial data loaded.");
         }

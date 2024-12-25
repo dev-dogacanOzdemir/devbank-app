@@ -21,6 +21,7 @@ public class AccountDocument {
     private Long customerId;
     private AccountType accountType;
     private Double balance;
+    private String uniqueAccountNumber;
     private Date createdAt;
     private Double interestRate; // Vadeli hesaplar için faiz oranı
     private Date maturityDate;   // Vadeli hesaplar için vade bitiş tarihi

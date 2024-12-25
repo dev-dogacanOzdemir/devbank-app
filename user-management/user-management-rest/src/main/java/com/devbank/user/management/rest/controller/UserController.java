@@ -1,6 +1,7 @@
 package com.devbank.user.management.rest.controller;
 
 import com.devbank.error.management.exception.UserNotFoundException;
+import com.devbank.user.management.api.DTO.AuthenticationRequest;
 import com.devbank.user.management.api.DTO.LoginInfoDTO;
 import com.devbank.user.management.api.DTO.UserDTO;
 import com.devbank.user.management.api.service.LoginInfoService;
@@ -8,6 +9,7 @@ import com.devbank.user.management.api.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,10 +20,10 @@ import java.util.List;
 @Validated
 public class UserController {
 
+
     private final UserService userService;
     private final LoginInfoService loginInfoService;
 
-    @Autowired
     public UserController(UserService userService, LoginInfoService loginInfoService) {
         this.userService = userService;
         this.loginInfoService = loginInfoService;
@@ -41,14 +43,16 @@ public class UserController {
                 .orElseThrow(() -> new UserNotFoundException("User not found with T.C. Number : " + tcNumber));
     }
 
-    public ResponseEntity<UserDTO> loginUser(@RequestParam String tcNumber, @RequestParam String phoneNumber, @RequestParam String password) {
-        return userService.authenticateUser(tcNumber, phoneNumber, password)
+    @PostMapping("/login")
+    public ResponseEntity<UserDTO> loginUser(@RequestBody AuthenticationRequest authRequest) {
+        System.out.println("Login metodu çağrıldı.");
+        return userService.authenticateUser(authRequest)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new UserNotFoundException("Invalid login credentials"));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> updateUser(@PathVariable String id, @RequestBody UserDTO userDTO) {
         UserDTO updatedUser = userService.updateUser(id, userDTO);
         return ResponseEntity.ok(updatedUser);
     }
@@ -78,6 +82,5 @@ public class UserController {
         List<LoginInfoDTO> loginInfos = loginInfoService.getLoginInfoByUserId(userId);
         return ResponseEntity.ok(loginInfos);
     }
-
 
 }

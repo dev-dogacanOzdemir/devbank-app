@@ -36,10 +36,10 @@ class AccountServiceImplTest {
 
     @Test
     void testCreateAccount_Success() {
-        AccountDTO accountDTO = new AccountDTO(null, 1001L, AccountType.CURRENT, 5000.0, null, null, null);
-        AccountDocument accountDocument = new AccountDocument(null, 1001L, AccountType.CURRENT, 5000.0, new Date(), null, null);
-        AccountDocument savedDocument = new AccountDocument(1L, 1001L, AccountType.CURRENT, 5000.0, new Date(), null, null);
-        AccountDTO expectedDTO = new AccountDTO(1L, 1001L, AccountType.CURRENT, 5000.0, new Date(), null, null);
+        AccountDTO accountDTO = new AccountDTO(null, 1001L, AccountType.CURRENT, 5000.0, "TR1234567891234567", null, null,null);
+        AccountDocument accountDocument = new AccountDocument(null, 1001L, AccountType.CURRENT, 5000.0, "TR1234567891234567", new Date(), null, null);
+        AccountDocument savedDocument = new AccountDocument(1L, 1001L, AccountType.CURRENT, 5000.0, "TR1234567891234567", new Date(), null, null);
+        AccountDTO expectedDTO = new AccountDTO(1L, 1001L, AccountType.CURRENT, 5000.0, "TR1234567891234567", new Date(), null, null);
 
         when(accountMapper.toDocument(accountDTO)).thenReturn(accountDocument);
         when(accountRepository.save(accountDocument)).thenReturn(savedDocument);
@@ -49,13 +49,14 @@ class AccountServiceImplTest {
 
         assertNotNull(result);
         assertEquals(1L, result.getAccountId());
+        assertEquals("TR1234567891234567", result.getUniqueAccountNumber());
         verify(accountRepository, times(1)).save(accountDocument);
     }
 
     @Test
     void testGetAccountById_Success() {
-        AccountDocument accountDocument = new AccountDocument(1L, 1001L, AccountType.CURRENT, 5000.0, new Date(), null, null);
-        AccountDTO accountDTO = new AccountDTO(1L, 1001L, AccountType.CURRENT, 5000.0, new Date(), null, null);
+        AccountDocument accountDocument = new AccountDocument(1L, 1001L, AccountType.CURRENT, 5000.0, "TR1234567891234567", new Date(), null, null);
+        AccountDTO accountDTO = new AccountDTO(1L, 1001L, AccountType.CURRENT, 5000.0, "TR1234567891234567", new Date(), null, null);
 
         when(accountRepository.findById(1L)).thenReturn(Optional.of(accountDocument));
         when(accountMapper.toDTO(accountDocument)).thenReturn(accountDTO);
@@ -64,8 +65,10 @@ class AccountServiceImplTest {
 
         assertNotNull(result);
         assertEquals(1L, result.getAccountId());
+        assertEquals("TR1234567891234567", result.getUniqueAccountNumber());
         verify(accountRepository, times(1)).findById(1L);
     }
+
 
     @Test
     void testGetAccountById_NotFound() {
@@ -79,10 +82,10 @@ class AccountServiceImplTest {
 
     @Test
     void testUpdateAccount_Success() {
-        AccountDTO accountDTO = new AccountDTO(1L, 1001L, AccountType.CURRENT, 8000.0, null, null, null);
-        AccountDocument existingDocument = new AccountDocument(1L, 1001L, AccountType.CURRENT, 5000.0, new Date(), null, null);
-        AccountDocument updatedDocument = new AccountDocument(1L, 1001L, AccountType.CURRENT, 8000.0, new Date(), null, null);
-        AccountDTO expectedDTO = new AccountDTO(1L, 1001L, AccountType.CURRENT, 8000.0, new Date(), null, null);
+        AccountDTO accountDTO = new AccountDTO(1L, 1001L, AccountType.CURRENT, 8000.0, "TR1234567891234567", null, null,null);
+        AccountDocument existingDocument = new AccountDocument(1L, 1001L, AccountType.CURRENT, 5000.0, "TR1234567891234567", new Date(), null, null);
+        AccountDocument updatedDocument = new AccountDocument(1L, 1001L, AccountType.CURRENT, 8000.0, "TR1234567891234567", new Date(), null, null);
+        AccountDTO expectedDTO = new AccountDTO(1L, 1001L, AccountType.CURRENT, 8000.0, "TR1234567891234567", new Date(), null, null);
 
         when(accountRepository.findById(1L)).thenReturn(Optional.of(existingDocument));
         when(accountRepository.save(existingDocument)).thenReturn(updatedDocument);
@@ -92,9 +95,11 @@ class AccountServiceImplTest {
 
         assertNotNull(result);
         assertEquals(8000.0, result.getBalance());
+        assertEquals("TR1234567891234567", result.getUniqueAccountNumber());
         verify(accountRepository, times(1)).findById(1L);
         verify(accountRepository, times(1)).save(existingDocument);
     }
+
 
     @Test
     void testDeleteAccount_Success() {

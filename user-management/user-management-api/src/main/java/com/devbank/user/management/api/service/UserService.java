@@ -1,5 +1,6 @@
 package com.devbank.user.management.api.service;
 
+import com.devbank.user.management.api.DTO.AuthenticationRequest;
 import com.devbank.user.management.api.DTO.UserDTO;
 
 import java.util.Optional;
@@ -13,10 +14,10 @@ public interface UserService {
     Optional<UserDTO> findByTcNumber(String tcNumber);
 
     // Giriş işlemleri için kullanıcı kontrolü
-    Optional<UserDTO> authenticateUser(String tcNumber, String phone,String password);
+    Optional<UserDTO> authenticateUser(AuthenticationRequest authRequest);
 
     // Kullanıcı bilgilerini güncelleme
-    UserDTO updateUser(Long id, UserDTO userDTO);
+    UserDTO updateUser(String id, UserDTO userDTO);
 
     // Parola sıfırlama isteği
     boolean requestPasswordReset(String tcNumber, String phoneNumber);

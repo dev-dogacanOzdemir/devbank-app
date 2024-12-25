@@ -51,7 +51,7 @@ public class UserDocumentControllerTest {
         userDTO.setSurname("Yılmaz");
         userDTO.setTcNumber("12345678901");
         userDTO.setPhoneNumber("5551234567");
-        userDTO.setRole(Role.CUSTOMER);
+        userDTO.setRole(Role.ROLE_CUSTOMER);
 
         when(userService.registerUser(any(UserDTO.class))).thenReturn(userDTO);
 
@@ -99,7 +99,7 @@ public class UserDocumentControllerTest {
         userDTO.setSurname("Yılmaz");
         userDTO.setTcNumber("12345678901");
         userDTO.setPhoneNumber("5551234567");
-        userDTO.setRole(Role.CUSTOMER);
+        userDTO.setRole(Role.ROLE_CUSTOMER);
 
         when(userService.findByTcNumber("12345678901")).thenReturn(Optional.of(userDTO));
 
@@ -123,12 +123,12 @@ public class UserDocumentControllerTest {
     @WithMockUser(username = "testUser", roles = {"USER"})
     void testUpdateUser_Success() throws Exception {
         UserDTO userDTO = new UserDTO();
-        userDTO.setId(1L);
+        userDTO.setId("1");
         userDTO.setName("Mehmet");
         userDTO.setSurname("Yılmaz");
         userDTO.setPhoneNumber("5559876543");
 
-        when(userService.updateUser(eq(1L), any(UserDTO.class))).thenReturn(userDTO);
+        when(userService.updateUser(eq("1"), any(UserDTO.class))).thenReturn(userDTO);
 
         String userJson = """
                 {
@@ -149,7 +149,7 @@ public class UserDocumentControllerTest {
     @Test
     @WithMockUser(username = "testUser", roles = {"USER"})
     void testUpdateUser_NotFound() throws Exception {
-        when(userService.updateUser(eq(1L), any(UserDTO.class))).thenThrow(new UserNotFoundException("User not found"));
+        when(userService.updateUser(eq("1"), any(UserDTO.class))).thenThrow(new UserNotFoundException("User not found"));
 
         String userJson = """
             {

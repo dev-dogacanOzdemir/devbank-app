@@ -35,43 +35,45 @@ public class AccountControllerTest {
     @MockBean
     private AccountService accountService;
 
+
     @Test
     @WithMockUser(username = "testUser", roles = {"CUSTOMER"})
     void testCreateAccount_Success() throws Exception {
-        AccountDTO accountDTO = new AccountDTO(1L, 1001L, AccountType.CURRENT, 5000.0, new Date(), null, null);
+        AccountDTO accountDTO = new AccountDTO(1L, 1001L, AccountType.CURRENT, 5000.0, "TR1234567891234567", new Date(), null, null);
 
         when(accountService.createAccount(any(AccountDTO.class))).thenReturn(accountDTO);
 
         String accountJson = """
-            {
-                "customerId": 1001,
-                "accountId": 1,
-                "accountType": "CURRENT",
-                "balance": 5000.0,
-                "createdAt": "2024-12-20T15:00:00.000+00:00"
-            }
-            """;
+        {
+            "accountId": 1,
+            "customerId": 1001,
+            "accountType": "CURRENT",
+            "balance": 5000.0,
+            "uniqueAccountNumber": "TR1234567891234567",
+            "createdAt": "2024-12-20T15:00:00.000+00:00"
+        }
+        """;
 
         mockMvc.perform(post("/api/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(accountJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accountId").value(1))
-                .andExpect(jsonPath("$.customerId").value(1001));
+                .andExpect(jsonPath("$.uniqueAccountNumber").value("TR1234567891234567"));
     }
-
 
     @Test
     void testCreateAccount_InvalidInput() throws Exception {
         String invalidRequest = """
-            {
-                "customerId": 1001,
-                "accountId": 1,
-                "accountType": "CURRENT",
-                "balance": 5000.0,
-                "createdAt": null
-            }
-            """;
+        {
+            "accountId": 1,
+            "customerId": 1001,
+            "accountType": "CURRENT",
+            "balance": 5000.0,
+            "uniqueAccountNumber": "TR1234567891234567",
+            "createdAt": null
+        }
+        """;
 
         mockMvc.perform(post("/api/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -83,15 +85,16 @@ public class AccountControllerTest {
     @Test
     @WithMockUser(username = "testUser", roles = {"CUSTOMER"})
     void testGetAccountById_Success() throws Exception {
-        AccountDTO accountDTO = new AccountDTO(1L, 1001L, AccountType.CURRENT, 5000.0, new Date(), null, null);
+        AccountDTO accountDTO = new AccountDTO(1L, 1001L, AccountType.CURRENT, 5000.0, "TR1234567891234567", new Date(), null, null);
 
         when(accountService.getAccountById(1L)).thenReturn(accountDTO);
 
         mockMvc.perform(get("/api/accounts/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accountId").value(1))
-                .andExpect(jsonPath("$.balance").value(5000.0));
+                .andExpect(jsonPath("$.uniqueAccountNumber").value("TR1234567891234567"));
     }
+
 
     @Test
     @WithMockUser(username = "testUser", roles = {"CUSTOMER"})
@@ -106,25 +109,27 @@ public class AccountControllerTest {
     @Test
     @WithMockUser(username = "testUser", roles = {"CUSTOMER"})
     void testUpdateAccount_Success() throws Exception {
-        AccountDTO accountDTO = new AccountDTO(1L, 1001L, AccountType.CURRENT, 6000.0, new Date(), null, null);
+        AccountDTO accountDTO = new AccountDTO(1L, 1001L, AccountType.CURRENT, 6000.0, "TR1234567891234567", new Date(), null, null);
 
         when(accountService.updateAccount(eq(1L), any(AccountDTO.class))).thenReturn(accountDTO);
 
         String accountJson = """
-                {
-                    "customerId": 1001,
-                    "accountId": 1,
-                    "accountType": "CURRENT",
-                    "balance": 8000.0,
-                    "createdAt": "2024-12-20T15:00:00.000+00:00"
-                }
-                """;
+        {
+            "accountId": 1,
+            "customerId": 1001,
+            "accountType": "CURRENT",
+            "balance": 6000.0,
+            "uniqueAccountNumber": "TR1234567891234567",
+            "createdAt": "2024-12-20T15:00:00.000+00:00"
+        }
+        """;
 
         mockMvc.perform(put("/api/accounts/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(accountJson))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.balance").value(6000.0));
+                .andExpect(jsonPath("$.balance").value(6000.0))
+                .andExpect(jsonPath("$.uniqueAccountNumber").value("TR1234567891234567"));
     }
 
     @Test
@@ -134,14 +139,15 @@ public class AccountControllerTest {
                 .thenThrow(new AccountNotFoundException("Account not found"));
 
         String accountJson = """
-            {
-                "accountId": 1,
-                "customerId": 1001,
-                "accountType": "CURRENT",
-                "balance": 6000.0,
-                "createdAt": "2024-12-20T15:00:00.000+00:00"
-            }
-            """;
+        {
+            "accountId": 1,
+            "customerId": 1001,
+            "accountType": "CURRENT",
+            "balance": 6000.0,
+            "uniqueAccountNumber": "TR1234567891234567",
+            "createdAt": "2024-12-20T15:00:00.000+00:00"
+        }
+        """;
 
         mockMvc.perform(put("/api/accounts/1")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -149,6 +155,7 @@ public class AccountControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Account not found"));
     }
+
 
     @Test
     @WithMockUser(username = "testUser", roles = {"CUSTOMER"})
@@ -167,4 +174,51 @@ public class AccountControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Account not found"));
     }
+
+    @Test
+    @WithMockUser(username = "testUser", roles = {"CUSTOMER"})
+    void testCreateAccount_WithoutIBAN() throws Exception {
+        AccountDTO accountDTO = new AccountDTO(1L, 1001L, AccountType.CURRENT, 5000.0,"", null, null, null);
+
+        when(accountService.createAccount(any(AccountDTO.class))).thenReturn(accountDTO);
+
+        String accountJson = """
+        {
+            "customerId": 1001,
+            "accountId": 1,
+            "accountType": "CURRENT",
+            "balance": 5000.0,
+            "createdAt": "2024-12-20T15:00:00.000+00:00"
+        }
+        """;
+
+        mockMvc.perform(post("/api/accounts")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(accountJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.accountId").value(1))
+                .andExpect(jsonPath("$.uniqueAccountNumber").doesNotExist());
+    }
+
+    @Test
+    @WithMockUser(username = "testUser", roles = {"CUSTOMER"})
+    void testCreateAccount_InvalidIBAN() throws Exception {
+        String invalidJson = """
+        {
+            "accountId": 1,
+            "customerId": 1001,
+            "accountType": "CURRENT",
+            "balance": 5000.0,
+            "uniqueAccountNumber": "INVALIDIBAN",
+            "createdAt": "2024-12-20T15:00:00.000+00:00"
+        }
+        """;
+
+        mockMvc.perform(post("/api/accounts")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidJson))
+                .andExpect(status().isBadRequest());
+    }
+
+
 }

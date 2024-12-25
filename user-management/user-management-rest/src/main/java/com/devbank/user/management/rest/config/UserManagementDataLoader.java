@@ -5,6 +5,7 @@ import com.devbank.user.management.impl.mongo.document.UserDocument;
 import com.devbank.user.management.impl.mongo.repository.LoginInfoRepository;
 import com.devbank.user.management.impl.mongo.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -15,17 +16,54 @@ public class UserManagementDataLoader implements CommandLineRunner {
 
     private final UserRepository userRepository;
     private final LoginInfoRepository loginInfoRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserManagementDataLoader(UserRepository userRepository, LoginInfoRepository loginInfoRepository) {
+    public UserManagementDataLoader(UserRepository userRepository, LoginInfoRepository loginInfoRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.loginInfoRepository = loginInfoRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public void run(String... args) {
         if (userRepository.count() == 0) {
-            UserDocument user = new UserDocument(1L, "John", "Doe", "12345678901", "5551234567", Role.USER, "hashed_password", new Date());
+            UserDocument admin = new UserDocument(
+                    "999999",
+                    "Doğacan",
+                    "Özdemir",
+                    "devbankADMIN",
+                    "ADMIN",
+                    Role.ROLE_ADMIN,
+                    passwordEncoder.encode("dev.bank$$2024"), // Parolayı hashle
+                    new Date()
+            );
+            userRepository.save(admin);
+
+            // Normal kullanıcı
+            UserDocument user = new UserDocument(
+                    null,
+                    "John",
+                    "Doe",
+                    "11122233444",
+                    "5552223344",
+                    Role.ROLE_USER,
+                    passwordEncoder.encode("hashed_password"), // Parolayı hashle
+                    new Date()
+            );
             userRepository.save(user);
+
+            // Müşteri
+            UserDocument customer = new UserDocument(
+                    "1001",
+                    "Emel",
+                    "Özdemir",
+                    "22233344555",
+                    "5553334455",
+                    Role.ROLE_CUSTOMER,
+                    passwordEncoder.encode("dev.bank$$2024"), // Parolayı hashle
+                    new Date()
+            );
+            userRepository.save(customer);
             System.out.println("User data loaded.");
         }
 

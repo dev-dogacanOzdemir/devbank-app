@@ -6,5 +6,14 @@ spring:
       uri: mongodb://localhost:27017/devbank
       database: devbank
       auto-index-creation: true
+  security:
+    user:
+      name: devbankADMIN
+      password: d0a.DEVBANK
+      roles: ADMIN
 server:
   port: 2001
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.security.web.firewall: DEBUG

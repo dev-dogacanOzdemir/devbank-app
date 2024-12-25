@@ -1,8 +1,10 @@
 package com.devbank.user.management.impl.mongo;
 
 import com.devbank.error.management.exception.UserNotFoundException;
+import com.devbank.user.management.api.DTO.AuthenticationRequest;
 import com.devbank.user.management.api.DTO.LoginInfoDTO;
 import com.devbank.user.management.api.DTO.UserDTO;
+import com.devbank.user.management.api.enums.Role;
 import com.devbank.user.management.impl.mongo.mapper.UserMapper;
 import com.devbank.user.management.impl.mongo.document.LoginInfoDocument;
 import com.devbank.user.management.impl.mongo.document.UserDocument;
@@ -15,10 +17,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.*;
 
+import static com.devbank.user.management.api.enums.Role.ROLE_CUSTOMER;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -57,7 +61,7 @@ class UserDocumentServiceImplTest {
         userDTO.setPassword("password");
 
         UserDocument user = new UserDocument();
-        user.setId(1L);
+        user.setId("1");
         user.setName("Ahmet");
         user.setSurname("Yılmaz");
         user.setTcNumber("12345678901");
@@ -71,7 +75,7 @@ class UserDocumentServiceImplTest {
         UserDTO result = userService.registerUser(userDTO);
 
         assertNotNull(result);
-        assertEquals(1L, result.getId());
+        assertEquals("1", result.getId());
         assertEquals("Ahmet", result.getName());
         verify(userRepository, times(1)).save(any(UserDocument.class));
     }
@@ -79,7 +83,7 @@ class UserDocumentServiceImplTest {
     @Test
     void testFindByTcNumber() {
         UserDocument user = new UserDocument();
-        user.setId(1L);
+        user.setId("1");
         user.setName("Ahmet");
         user.setSurname("Yılmaz");
         user.setTcNumber("12345678901");
@@ -96,31 +100,63 @@ class UserDocumentServiceImplTest {
 
     @Test
     void testAuthenticateUser_Success() {
-        UserDocument user = new UserDocument();
-        user.setId(1L);
-        user.setName("Ahmet");
-        user.setSurname("Yılmaz");
-        user.setTcNumber("12345678901");
-        user.setPhoneNumber("5551234567");
-        user.setPasswordHash("hashedPassword");
+        // Giriş isteği oluştur
+        AuthenticationRequest authRequest = new AuthenticationRequest();
+        authRequest.setTcNumber("12345678901");
+        authRequest.setPhoneNumber("5551234567");
+        authRequest.setPassword("password");
 
+        // Mock kullanıcı belgesi
+        UserDocument mockUser = new UserDocument();
+        mockUser.setId("1");
+        mockUser.setTcNumber("12345678901");
+        mockUser.setPhoneNumber("5551234567");
+        mockUser.setPasswordHash("encodedPassword"); // Encode edilmiş şifreyi manuel ata
+        mockUser.setName("John");
+        mockUser.setSurname("Doe");
+        mockUser.setRole(ROLE_CUSTOMER);
+
+        // Repository davranışını tanımla
         when(userRepository.findByTcNumberAndPhoneNumber("12345678901", "5551234567"))
-                .thenReturn(Optional.of(user));
-        when(passwordEncoder.matches("password", "hashedPassword")).thenReturn(true);
+                .thenReturn(Optional.of(mockUser));
 
-        Optional<UserDTO> result = userService.authenticateUser("12345678901", "5551234567", "password");
+        // PasswordEncoder davranışını tanımla
+        when(passwordEncoder.matches("password", "encodedPassword")).thenReturn(true);
 
+        // Mapper davranışını tanımla
+        UserDTO mockUserDTO = new UserDTO();
+        mockUserDTO.setId("1");
+        mockUserDTO.setTcNumber("12345678901");
+        mockUserDTO.setPhoneNumber("5551234567");
+        mockUserDTO.setName("John");
+        mockUserDTO.setSurname("Doe");
+        mockUserDTO.setRole(ROLE_CUSTOMER);
+
+        when(userMapper.toDto(mockUser)).thenReturn(mockUserDTO);
+
+        // Test edilen metot
+        Optional<UserDTO> result = userService.authenticateUser(authRequest);
+
+        // Doğrulamalar
         assertTrue(result.isPresent());
-        assertEquals("Ahmet", result.get().getName());
-        verify(userRepository, times(1)).findByTcNumberAndPhoneNumber("12345678901", "5551234567");
+        assertEquals("12345678901", result.get().getTcNumber());
+        assertEquals("John", result.get().getName());
+        assertEquals("Doe", result.get().getSurname());
+        assertEquals(ROLE_CUSTOMER, result.get().getRole());
     }
+
 
     @Test
     void testAuthenticateUser_Failure() {
         when(userRepository.findByTcNumberAndPhoneNumber("12345678901", "5551234567"))
                 .thenReturn(Optional.empty());
 
-        Optional<UserDTO> result = userService.authenticateUser("12345678901", "5551234567", "password");
+        AuthenticationRequest authRequest = new AuthenticationRequest();
+        authRequest.setTcNumber("12345678901");
+        authRequest.setPhoneNumber("5551234567");
+        authRequest.setPassword("password");
+
+        Optional<UserDTO> result = userService.authenticateUser(authRequest);
 
         assertFalse(result.isPresent());
         verify(userRepository, times(1)).findByTcNumberAndPhoneNumber("12345678901", "5551234567");
@@ -129,7 +165,7 @@ class UserDocumentServiceImplTest {
     @Test
     void testUpdateUser_Success() {
         UserDocument user = new UserDocument();
-        user.setId(1L);
+        user.setId("1");
         user.setName("Ahmet");
         user.setSurname("Yılmaz");
         user.setPhoneNumber("5551234567");
@@ -140,7 +176,7 @@ class UserDocumentServiceImplTest {
         userDTO.setPhoneNumber("5559876543");
 
         UserDocument updatedUser = new UserDocument();
-        updatedUser.setId(1L);
+        updatedUser.setId("1");
         updatedUser.setName("Mehmet");
         updatedUser.setSurname("Demir");
         updatedUser.setPhoneNumber("5559876543");
@@ -149,7 +185,7 @@ class UserDocumentServiceImplTest {
         when(userRepository.save(any(UserDocument.class))).thenReturn(updatedUser);
         when(userMapper.toDto(updatedUser)).thenReturn(userDTO);
 
-        UserDTO result = userService.updateUser(1L, userDTO);
+        UserDTO result = userService.updateUser("1L", userDTO);
 
         assertNotNull(result);
         assertEquals("Mehmet", result.getName());
@@ -163,7 +199,7 @@ class UserDocumentServiceImplTest {
 
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(UserNotFoundException.class, () -> userService.updateUser(1L, userDTO));
+        assertThrows(UserNotFoundException.class, () -> userService.updateUser("1L", userDTO));
         verify(userRepository, times(1)).findById(1L);
     }
 

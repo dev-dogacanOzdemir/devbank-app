@@ -1,6 +1,7 @@
 package com.devbank.user.management.impl.mongo.service;
 
 import com.devbank.error.management.exception.UserNotFoundException;
+import com.devbank.user.management.api.DTO.AuthenticationRequest;
 import com.devbank.user.management.api.DTO.UserDTO;
 import com.devbank.user.management.impl.mongo.mapper.UserMapper;
 import com.devbank.user.management.api.service.UserService;
@@ -39,6 +40,10 @@ public class UserServiceImpl implements UserService {
         user.setPasswordHash(passwordEncoder.encode(userDTO.getPassword())); // Şifreyi hashle
         user.setCreatedAt(new Date());
 
+        // Log: Hashlenmiş şifreyi ve kullanıcı detaylarını kontrol edin
+        System.out.println("Kayıt edilen kullanıcı: " + user);
+        System.out.println("Hashlenmiş şifre: " + user.getPasswordHash());
+
         UserDocument savedUser = userRepository.save(user);
 
         userDTO.setId(savedUser.getId());
@@ -61,24 +66,41 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserDTO> authenticateUser(String tcNumber, String phoneNumber, String password) {
-        // Kullanıcıyı kimlik bilgilerine göre doğrula
-        Optional<UserDocument> user = userRepository.findByTcNumberAndPhoneNumber(tcNumber, phoneNumber);
-        if (user.isPresent() && passwordEncoder.matches(password, user.get().getPasswordHash())) {
-            UserDTO dto = new UserDTO();
-            dto.setId(user.get().getId());
-            dto.setName(user.get().getName());
-            dto.setSurname(user.get().getSurname());
-            dto.setTcNumber(user.get().getTcNumber());
-            dto.setPhoneNumber(user.get().getPhoneNumber());
-            dto.setRole(user.get().getRole());
-            return Optional.of(dto);
+    public Optional<UserDTO> authenticateUser(AuthenticationRequest authRequest) {
+        System.out.println("İstek logu: " + authRequest);
+        // Kullanıcıyı veritabanında bul
+        Optional<UserDocument> user = userRepository.findByTcNumberAndPhoneNumber(
+                authRequest.getTcNumber(),
+                authRequest.getPhoneNumber()
+        );
+        System.out.println("Kullanıcı sorgu sonucu: " + user);
+
+        // Log: Kullanıcı bulunup bulunmadığını kontrol et
+        if (user.isEmpty()) {
+            System.out.println("Kullanıcı bulunamadı. T.C. Kimlik No: " + authRequest.getTcNumber()
+                    + ", Telefon No: " + authRequest.getPhoneNumber());
+            return Optional.empty();
+        } else {
+            System.out.println("Kullanıcı bulundu: " + user.get());
         }
-        return Optional.empty();
+
+        // Şifre doğrulama
+        boolean isPasswordValid = passwordEncoder.matches(authRequest.getPassword(), user.get().getPasswordHash());
+        System.out.println("Şifre doğrulama sonucu: " + isPasswordValid);
+
+        if (!isPasswordValid) {
+            System.out.println("Şifre hatalı.");
+            return Optional.empty();
+        }
+
+        UserDTO userDTO = userMapper.toDto(user.get());
+        System.out.println("UserDTO dönüşümü başarılı: " + userDTO);
+
+        return Optional.of(userDTO);
     }
 
     @Override
-    public UserDTO updateUser(Long id, UserDTO userDTO) {
+    public UserDTO updateUser(String id, UserDTO userDTO) {
         UserDocument user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("Kullanıcı bulunamadı: " + id));
 

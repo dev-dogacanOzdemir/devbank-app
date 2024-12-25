@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
 
 @Data
-@Document(collection = "login_info")
+@Document(collection = "login-info")
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginInfoDocument {

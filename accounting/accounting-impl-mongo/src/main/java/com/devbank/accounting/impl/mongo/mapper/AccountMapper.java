@@ -13,6 +13,7 @@ public class AccountMapper {
                 dto.getCustomerId(),
                 dto.getAccountType(),
                 dto.getBalance(),
+                dto.getUniqueAccountNumber(),
                 dto.getCreatedAt(),
                 dto.getInterestRate(),
                 dto.getMaturityDate()
@@ -25,6 +26,7 @@ public class AccountMapper {
         dto.setCustomerId(document.getCustomerId());
         dto.setAccountType(document.getAccountType());
         dto.setBalance(document.getBalance());
+        dto.setUniqueAccountNumber(dto.getUniqueAccountNumber());
         dto.setCreatedAt(document.getCreatedAt());
         dto.setInterestRate(document.getInterestRate());
         dto.setMaturityDate(document.getMaturityDate());

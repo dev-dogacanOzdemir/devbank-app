@@ -6,14 +6,17 @@ import com.devbank.user.management.api.DTO.LoginInfoDTO;
 import com.devbank.user.management.api.DTO.UserDTO;
 import com.devbank.user.management.api.service.LoginInfoService;
 import com.devbank.user.management.api.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -44,12 +47,14 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserDTO> loginUser(@RequestBody AuthenticationRequest authRequest) {
-        System.out.println("Login metodu çağrıldı.");
-        return userService.authenticateUser(authRequest)
+    public ResponseEntity<UserDTO> authenticateUser(
+            @RequestBody AuthenticationRequest authRequest,
+            HttpServletRequest request) {
+        return userService.authenticateUser(authRequest, request)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new UserNotFoundException("Invalid login credentials"));
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable String id, @RequestBody UserDTO userDTO) {
@@ -75,6 +80,17 @@ public class UserController {
         } else {
             return ResponseEntity.badRequest().body("Failed to reset password.");
         }
+    }
+
+    @GetMapping("/login-ingo/{userId}")
+    public ResponseEntity<List<LoginInfoDTO>> getLoginInfoByUserId(@PathVariable String userId) {
+        List<LoginInfoDTO> loginInfoList = loginInfoService.getLoginInfoByUserId(userId);
+
+        if (loginInfoList.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(loginInfoList);
     }
 
 }

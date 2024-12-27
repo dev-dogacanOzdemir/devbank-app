@@ -2,29 +2,37 @@ package com.devbank.user.management.impl.mongo.mapper;
 
 import com.devbank.user.management.api.DTO.LoginInfoDTO;
 import com.devbank.user.management.impl.mongo.document.LoginInfoDocument;
+import com.devbank.user.management.impl.mongo.document.UserDocument;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Component
 public class LoginInfoMapper {
 
 
-    public LoginInfoDocument toDocument(LoginInfoDTO dto) {
-        return new LoginInfoDocument(
-                dto.getId(),
-                dto.getUserId(),
-                dto.getIpAddress(),
-                dto.getLoginTime() != null ? dto.getLoginTime() : java.time.LocalDateTime.now() // Eğer DTO'da zaman yoksa yeni bir zaman oluştur
+    public LoginInfoDTO toDto(UserDocument userDocument, String ipAddress) {
+        return new LoginInfoDTO(
+                userDocument.getId(), // User ID
+                ipAddress, // IP Address
+                LocalDateTime.now() // Login Time
         );
     }
 
-    public LoginInfoDTO toDTO(LoginInfoDocument document) {
+    public LoginInfoDTO toDto(LoginInfoDocument document) {
         return new LoginInfoDTO(
-                document.getId(),
-                document.getUserId(),
-                document.getIpAddress(),
-                document.getLoginTime()
+                document.getUserId(), // Kullanıcı ID'si
+                document.getIpAddress(), // IP Adresi
+                document.getLoginTime() // Giriş Zamanı
+        );
+    }
+    public LoginInfoDocument toDocument(LoginInfoDTO dto) {
+        return new LoginInfoDocument(
+                null, // ID (MongoDB tarafından oluşturulur)
+                dto.getUserId(),
+                dto.getIpAddress(),
+                dto.getLoginTime()
         );
     }
 }

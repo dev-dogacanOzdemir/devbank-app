@@ -19,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -213,36 +214,32 @@ public class UserDocumentControllerTest {
     @Test
     @WithMockUser(username = "testUser", roles = {"CUSTOMER"})
     void testGetLoginInfo_Success() throws Exception {
-        // Test verisi
         List<LoginInfoDTO> loginInfoList = List.of(
-                new LoginInfoDTO("192.168.1.1", new Date()),
-                new LoginInfoDTO("192.168.1.2", new Date())
+                new LoginInfoDTO("1", "192.168.1.1", LocalDateTime.now()),
+                new LoginInfoDTO("1", "192.168.1.2", LocalDateTime.now())
         );
 
-        // Mock davranışını tanımla
-        when(loginInfoService.getLoginInfoByUserId(1L)).thenReturn(loginInfoList);
+        when(loginInfoService.getLoginInfoByUserId("1")).thenReturn(loginInfoList);
 
-        // GET isteğini gerçekleştir ve sonucu doğrula
         mockMvc.perform(get("/api/users/login-info/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2)) // JSON array uzunluğu
-                .andExpect(jsonPath("$[0].ipAddress").value("192.168.1.1")) // İlk öğe kontrolü
-                .andExpect(jsonPath("$[1].ipAddress").value("192.168.1.2")); // İkinci öğe kontrolü
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].ipAddress").value("192.168.1.1"))
+                .andExpect(jsonPath("$[1].ipAddress").value("192.168.1.2"));
     }
 
     @Test
     @WithMockUser(username = "testUser", roles = {"CUSTOMER"})
     void testGetLoginInfo_NotFound() throws Exception {
-        // Mock davranışını tanımla
-        when(loginInfoService.getLoginInfoByUserId(99L)).thenReturn(List.of());
+        when(loginInfoService.getLoginInfoByUserId("99")).thenReturn(List.of());
 
-        // GET isteğini gerçekleştir ve sonucu doğrula
         mockMvc.perform(get("/api/users/login-info/99")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk()) // Not found değil, boş liste dönüyor
-                .andExpect(jsonPath("$.length()").value(0)); // JSON array uzunluğu 0 olmalı
+                .andExpect(status().isNoContent());
     }
+
+
 
 
 }

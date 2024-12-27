@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import com.devbank.user.management.api.enums.Role;
 
@@ -68,7 +69,7 @@ public class UserManagementDataLoader implements CommandLineRunner {
         }
 
         if (loginInfoRepository.count() == 0) {
-            LoginInfoDocument loginInfo = new LoginInfoDocument(1L, 1L, "192.168.0.1", new Date());
+            LoginInfoDocument loginInfo = new LoginInfoDocument("1L", "1L", "192.168.0.1", LocalDateTime.now());
             loginInfoRepository.save(loginInfo);
             System.out.println("Login info loaded.");
         }

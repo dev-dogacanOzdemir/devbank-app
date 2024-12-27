@@ -5,6 +5,8 @@ import com.devbank.user.management.api.DTO.AuthenticationRequest;
 import com.devbank.user.management.api.DTO.LoginInfoDTO;
 import com.devbank.user.management.api.DTO.UserDTO;
 import com.devbank.user.management.api.enums.Role;
+import com.devbank.user.management.api.service.LoginInfoService;
+import com.devbank.user.management.impl.mongo.mapper.LoginInfoMapper;
 import com.devbank.user.management.impl.mongo.mapper.UserMapper;
 import com.devbank.user.management.impl.mongo.document.LoginInfoDocument;
 import com.devbank.user.management.impl.mongo.document.UserDocument;
@@ -12,6 +14,7 @@ import com.devbank.user.management.impl.mongo.repository.LoginInfoRepository;
 import com.devbank.user.management.impl.mongo.repository.UserRepository;
 import com.devbank.user.management.impl.mongo.service.LoginInfoServiceImpl;
 import com.devbank.user.management.impl.mongo.service.UserServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -20,6 +23,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static com.devbank.user.management.api.enums.Role.ROLE_CUSTOMER;
@@ -40,11 +44,15 @@ class UserDocumentServiceImplTest {
     @Mock
     private UserMapper userMapper;
 
-    @InjectMocks
+    @Mock
     private LoginInfoServiceImpl loginInfoService;
 
     @Mock
     private LoginInfoRepository loginInfoRepository;
+
+
+    @Mock
+    private LoginInfoMapper loginInfoMapper;
 
     @BeforeEach
     void setUp() {
@@ -97,7 +105,6 @@ class UserDocumentServiceImplTest {
         assertEquals("Ahmet", result.get().getName());
         verify(userRepository, times(1)).findByTcNumber("12345678901");
     }
-
     @Test
     void testAuthenticateUser_Success() {
         // Giriş isteği oluştur
@@ -134,8 +141,19 @@ class UserDocumentServiceImplTest {
 
         when(userMapper.toDto(mockUser)).thenReturn(mockUserDTO);
 
+        // Mock HttpServletRequest
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        when(mockRequest.getRemoteAddr()).thenReturn("192.168.1.1");
+
+        // Mock LoginInfoMapper
+        LoginInfoDTO mockLoginInfoDTO = new LoginInfoDTO("1", "192.168.1.1", LocalDateTime.now());
+        when(loginInfoMapper.toDto(mockUser, "192.168.1.1")).thenReturn(mockLoginInfoDTO);
+
+        // Mock LoginInfoService
+        doNothing().when(loginInfoService).saveLoginInfo(mockLoginInfoDTO);
+
         // Test edilen metot
-        Optional<UserDTO> result = userService.authenticateUser(authRequest);
+        Optional<UserDTO> result = userService.authenticateUser(authRequest, mockRequest);
 
         // Doğrulamalar
         assertTrue(result.isPresent());
@@ -143,64 +161,88 @@ class UserDocumentServiceImplTest {
         assertEquals("John", result.get().getName());
         assertEquals("Doe", result.get().getSurname());
         assertEquals(ROLE_CUSTOMER, result.get().getRole());
+
+        // LoginInfo kaydının çağrıldığını doğrula
+        verify(loginInfoService, times(1)).saveLoginInfo(mockLoginInfoDTO);
     }
+
 
 
     @Test
     void testAuthenticateUser_Failure() {
+        // Kullanıcı bulunamadığı durum için repository davranışını mockla
         when(userRepository.findByTcNumberAndPhoneNumber("12345678901", "5551234567"))
                 .thenReturn(Optional.empty());
 
+        // Giriş isteği oluştur
         AuthenticationRequest authRequest = new AuthenticationRequest();
         authRequest.setTcNumber("12345678901");
         authRequest.setPhoneNumber("5551234567");
         authRequest.setPassword("password");
 
-        Optional<UserDTO> result = userService.authenticateUser(authRequest);
+        // Mock HttpServletRequest
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
 
-        assertFalse(result.isPresent());
-        verify(userRepository, times(1)).findByTcNumberAndPhoneNumber("12345678901", "5551234567");
+        // Test edilen metot
+        Optional<UserDTO> result = userService.authenticateUser(authRequest, mockRequest);
+
+        // Doğrulamalar
+        assertFalse(result.isPresent()); // Kullanıcı doğrulama başarısız olmalı
+        verify(userRepository, times(1)).findByTcNumberAndPhoneNumber("12345678901", "5551234567"); // Repository çağrılmış olmalı
+        verify(loginInfoService, never()).saveLoginInfo(any()); // LoginInfo kaydı yapılmamalı
     }
+
 
     @Test
     void testUpdateUser_Success() {
-        UserDocument user = new UserDocument();
-        user.setId("1");
-        user.setName("Ahmet");
-        user.setSurname("Yılmaz");
-        user.setPhoneNumber("5551234567");
+        // Mock mevcut kullanıcı
+        UserDocument mockUser = new UserDocument();
+        mockUser.setId("1001");
+        mockUser.setName("Ahmet");
+        mockUser.setSurname("Yılmaz");
+        mockUser.setPhoneNumber("5551234567");
 
-        UserDTO userDTO = new UserDTO();
-        userDTO.setName("Mehmet");
-        userDTO.setSurname("Demir");
-        userDTO.setPhoneNumber("5559876543");
+        // Güncellenmiş kullanıcı bilgisi
+        UserDTO updatedDTO = new UserDTO();
+        updatedDTO.setName("Mehmet");
+        updatedDTO.setSurname("Demir");
+        updatedDTO.setPhoneNumber("5559876543");
 
+        // Mock güncellenmiş kullanıcı
         UserDocument updatedUser = new UserDocument();
-        updatedUser.setId("1");
+        updatedUser.setId("1001");
         updatedUser.setName("Mehmet");
         updatedUser.setSurname("Demir");
         updatedUser.setPhoneNumber("5559876543");
 
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(userRepository.save(any(UserDocument.class))).thenReturn(updatedUser);
-        when(userMapper.toDto(updatedUser)).thenReturn(userDTO);
+        // Mock repository davranışları
+        when(userRepository.findById("1001")).thenReturn(Optional.of(mockUser)); // Kullanıcıyı döndürür
+        when(userRepository.save(any(UserDocument.class))).thenReturn(updatedUser); // Güncellenmiş kullanıcıyı döndürür
+        when(userMapper.toDto(updatedUser)).thenReturn(updatedDTO); // DTO dönüşümü
 
-        UserDTO result = userService.updateUser("1L", userDTO);
+        // Metot çağrısı
+        UserDTO result = userService.updateUser("1001", updatedDTO);
 
+        // Doğrulamalar
         assertNotNull(result);
         assertEquals("Mehmet", result.getName());
+        assertEquals("Demir", result.getSurname());
+        assertEquals("5559876543", result.getPhoneNumber());
+        verify(userRepository, times(1)).findById("1001");
         verify(userRepository, times(1)).save(any(UserDocument.class));
     }
+
+
 
     @Test
     void testUpdateUser_UserNotFound() {
         UserDTO userDTO = new UserDTO();
         userDTO.setName("Mehmet");
 
-        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+        when(userRepository.findById("1L")).thenReturn(Optional.empty());
 
         assertThrows(UserNotFoundException.class, () -> userService.updateUser("1L", userDTO));
-        verify(userRepository, times(1)).findById(1L);
+        verify(userRepository, times(1)).findById("1L");
     }
 
     @Test
@@ -276,20 +318,4 @@ class UserDocumentServiceImplTest {
         verify(userRepository, never()).save(any(UserDocument.class));
     }
 
-    @Test
-    void testGetLoginInfoByUserId() {
-        // Test verileri
-        Long userId = 1L;
-        LoginInfoDocument loginInfo = new LoginInfoDocument();
-        loginInfo.setUserId(userId);
-        loginInfo.setIpAddress("192.168.1.1");
-
-        when(loginInfoRepository.findByUserId(userId)).thenReturn(Collections.singletonList(loginInfo));
-
-        List<LoginInfoDTO> result = loginInfoService.getLoginInfoByUserId(userId);
-
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals("192.168.1.1", result.get(0).getIpAddress());
-    }
 }

@@ -24,4 +24,22 @@ public class LoginInfoServiceImpl implements LoginInfoService {
         this.loginInfoMapper = loginInfoMapper;
     }
 
+    @Override
+    public void saveLoginInfo(LoginInfoDTO loginInfo) {
+        LoginInfoDocument document = loginInfoMapper.toDocument(loginInfo);
+        loginInfoRepository.save(document);
+    }
+
+    @Override
+    public List<LoginInfoDTO> getLoginInfoByUserId(String userId) {
+        List<LoginInfoDocument> documents = loginInfoRepository.findAllByUserId(userId);
+
+        return documents.stream()
+                .map(loginInfoMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+
+
+
 }

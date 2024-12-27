@@ -12,7 +12,6 @@ import java.util.Date;
 @NoArgsConstructor
 public class LoginInfoDTO {
 
-    private String id;
     private String userId;
     private String ipAddress;
     private LocalDateTime loginTime;

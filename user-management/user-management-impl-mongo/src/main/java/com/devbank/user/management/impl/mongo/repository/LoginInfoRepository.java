@@ -5,7 +5,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 
-public interface LoginInfoRepository extends MongoRepository<LoginInfoDocument, Long> {
+public interface LoginInfoRepository extends MongoRepository<LoginInfoDocument, String> {
 
-    List<LoginInfoDocument> findByUserId(Long userId);
 }

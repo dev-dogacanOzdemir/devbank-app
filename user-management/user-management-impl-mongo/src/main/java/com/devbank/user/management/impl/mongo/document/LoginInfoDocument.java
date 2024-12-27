@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -15,8 +16,9 @@ import java.util.Date;
 public class LoginInfoDocument {
 
     @Id
-    private Long id;
-    private Long userId;
+    private String id;
+    private String userId;
     private String ipAddress;
-    private Date loginTime;
+    private LocalDateTime loginTime;
+
 }

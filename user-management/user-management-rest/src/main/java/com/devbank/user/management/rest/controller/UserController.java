@@ -77,10 +77,4 @@ public class UserController {
         }
     }
 
-    @GetMapping("/login-info/{userId}")
-    public ResponseEntity<List<LoginInfoDTO>> getLoginInfo(@PathVariable Long userId) {
-        List<LoginInfoDTO> loginInfos = loginInfoService.getLoginInfoByUserId(userId);
-        return ResponseEntity.ok(loginInfos);
-    }
-
 }

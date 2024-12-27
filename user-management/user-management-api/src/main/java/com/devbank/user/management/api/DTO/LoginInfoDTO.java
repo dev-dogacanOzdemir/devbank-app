@@ -1,21 +1,20 @@
 package com.devbank.user.management.api.DTO;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class LoginInfoDTO {
 
-    private Long userId;
+    private String id;
+    private String userId;
     private String ipAddress;
-    private Date loginTime;
-
-    public LoginInfoDTO(String ipAddress, Date loginTime) {
-        this.ipAddress = ipAddress;
-        this.loginTime = loginTime;
-    }
-
-    public LoginInfoDTO() {}
+    private LocalDateTime loginTime;
 
 }

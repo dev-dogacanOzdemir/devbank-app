@@ -4,22 +4,27 @@ import com.devbank.user.management.api.DTO.LoginInfoDTO;
 import com.devbank.user.management.impl.mongo.document.LoginInfoDocument;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 @Component
 public class LoginInfoMapper {
 
-    public LoginInfoDTO toDto(LoginInfoDocument loginInfo) {
-        LoginInfoDTO dto = new LoginInfoDTO();
-        dto.setUserId(loginInfo.getUserId());
-        dto.setIpAddress(loginInfo.getIpAddress());
-        dto.setLoginTime(loginInfo.getLoginTime());
-        return dto;
+
+    public LoginInfoDocument toDocument(LoginInfoDTO dto) {
+        return new LoginInfoDocument(
+                dto.getId(),
+                dto.getUserId(),
+                dto.getIpAddress(),
+                dto.getLoginTime() != null ? dto.getLoginTime() : java.time.LocalDateTime.now() // Eğer DTO'da zaman yoksa yeni bir zaman oluştur
+        );
     }
 
-    public LoginInfoDocument toEntity(LoginInfoDTO dto) {
-        LoginInfoDocument loginInfo = new LoginInfoDocument();
-        loginInfo.setUserId(dto.getUserId());
-        loginInfo.setIpAddress(dto.getIpAddress());
-        loginInfo.setLoginTime(dto.getLoginTime());
-        return loginInfo;
+    public LoginInfoDTO toDTO(LoginInfoDocument document) {
+        return new LoginInfoDTO(
+                document.getId(),
+                document.getUserId(),
+                document.getIpAddress(),
+                document.getLoginTime()
+        );
     }
 }

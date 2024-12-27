@@ -6,6 +6,7 @@ import com.devbank.accounting.impl.mongo.document.AccountDocument;
 import com.devbank.accounting.impl.mongo.mapper.AccountMapper;
 import com.devbank.accounting.impl.mongo.repository.AccountRepository;
 import com.devbank.error.management.exception.AccountNotFoundException;
+import com.devbank.error.management.exception.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,13 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDTO createAccount(AccountDTO accountDTO) {
+        if (accountDTO.getUniqueAccountNumber() == null || accountDTO.getUniqueAccountNumber().isEmpty()) {
+            throw new CustomException("Unique Account Number cannot be null or empty.");
+        }
+        if (accountDTO.getUniqueAccountNumber() != null &&
+                !accountDTO.getUniqueAccountNumber().matches("^(TR|USD)[0-9]{16}$")) {
+            throw new IllegalArgumentException("Invalid IBAN format. Expected format: TR1234567891234567 or USD1234567891234567.");
+        }
         AccountDocument document = accountMapper.toDocument(accountDTO);
         document.setCreatedAt(new java.util.Date());
         AccountDocument savedDocument = accountRepository.save(document);

@@ -20,7 +20,7 @@ public class AccountingDataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) {
         if (accountRepository.count() == 0) {
-            AccountDocument account = new AccountDocument(1L, 100L, AccountType.SAVINGS, 1000.0, new Date(), 1.5, null);
+            AccountDocument account = new AccountDocument(1L, 100L, AccountType.SAVINGS, 1000.0,"TR1234567891234567", new Date(), 1.5, null);
             accountRepository.save(account);
             System.out.println("Accounting initial data loaded.");
         }

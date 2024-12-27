@@ -1,11 +1,16 @@
 package com.devbank.user.management.impl.mongo.service;
 
 import com.devbank.error.management.exception.UserNotFoundException;
+import com.devbank.user.management.api.DTO.AuthenticationRequest;
+import com.devbank.user.management.api.DTO.LoginInfoDTO;
 import com.devbank.user.management.api.DTO.UserDTO;
+import com.devbank.user.management.api.service.LoginInfoService;
+import com.devbank.user.management.impl.mongo.mapper.LoginInfoMapper;
 import com.devbank.user.management.impl.mongo.mapper.UserMapper;
 import com.devbank.user.management.api.service.UserService;
 import com.devbank.user.management.impl.mongo.document.UserDocument;
 import com.devbank.user.management.impl.mongo.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,12 +24,16 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final LoginInfoMapper loginInfoMapper;
+    private final LoginInfoService loginInfoService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, LoginInfoMapper loginInfoMapper, LoginInfoService loginInfoService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
+        this.loginInfoMapper = loginInfoMapper;
+        this.loginInfoService = loginInfoService;
     }
 
     @Override
@@ -38,6 +47,10 @@ public class UserServiceImpl implements UserService {
         user.setRole(userDTO.getRole());
         user.setPasswordHash(passwordEncoder.encode(userDTO.getPassword())); // Şifreyi hashle
         user.setCreatedAt(new Date());
+
+        // Log: Hashlenmiş şifreyi ve kullanıcı detaylarını kontrol edin
+        System.out.println("Kayıt edilen kullanıcı: " + user);
+        System.out.println("Hashlenmiş şifre: " + user.getPasswordHash());
 
         UserDocument savedUser = userRepository.save(user);
 
@@ -61,24 +74,31 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserDTO> authenticateUser(String tcNumber, String phoneNumber, String password) {
-        // Kullanıcıyı kimlik bilgilerine göre doğrula
-        Optional<UserDocument> user = userRepository.findByTcNumberAndPhoneNumber(tcNumber, phoneNumber);
-        if (user.isPresent() && passwordEncoder.matches(password, user.get().getPasswordHash())) {
-            UserDTO dto = new UserDTO();
-            dto.setId(user.get().getId());
-            dto.setName(user.get().getName());
-            dto.setSurname(user.get().getSurname());
-            dto.setTcNumber(user.get().getTcNumber());
-            dto.setPhoneNumber(user.get().getPhoneNumber());
-            dto.setRole(user.get().getRole());
-            return Optional.of(dto);
+    public Optional<UserDTO> authenticateUser(AuthenticationRequest authRequest, HttpServletRequest request) {
+        Optional<UserDocument> user = userRepository.findByTcNumberAndPhoneNumber(
+                authRequest.getTcNumber(), authRequest.getPhoneNumber()
+        );
+
+        if (user.isEmpty()) {
+            return Optional.empty();
         }
-        return Optional.empty();
+
+        boolean isPasswordValid = passwordEncoder.matches(authRequest.getPassword(), user.get().getPasswordHash());
+        if (!isPasswordValid) {
+            return Optional.empty();
+        }
+
+        // Login bilgisi kaydetme
+        LoginInfoDTO loginInfo = loginInfoMapper.toDto(user.get(), request.getRemoteAddr());
+        loginInfoService.saveLoginInfo(loginInfo);
+
+        // Kullanıcı DTO dönüşümü
+        UserDTO userDTO = userMapper.toDto(user.get());
+        return Optional.of(userDTO);
     }
 
     @Override
-    public UserDTO updateUser(Long id, UserDTO userDTO) {
+    public UserDTO updateUser(String id, UserDTO userDTO) {
         UserDocument user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("Kullanıcı bulunamadı: " + id));
 

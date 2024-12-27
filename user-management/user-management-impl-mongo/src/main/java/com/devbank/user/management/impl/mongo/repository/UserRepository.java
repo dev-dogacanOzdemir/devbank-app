@@ -13,5 +13,5 @@ public interface UserRepository extends MongoRepository<UserDocument, Long> {
     // T.C. kimlik numarası ve telefon numarasına göre kullanıcı bulma
     Optional<UserDocument> findByTcNumberAndPhoneNumber(String tcNumber, String phoneNumber);
 
-    Optional<UserDocument> findById(Long id);
+    Optional<UserDocument> findById(String id);
 }

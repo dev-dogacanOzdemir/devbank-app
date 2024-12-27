@@ -17,7 +17,7 @@ import java.util.Date;
 public class UserDocument {
 
     @Id
-    private Long id;
+    private String id;
     private String name;
     private String surname;
     private String tcNumber;

@@ -1,6 +1,7 @@
 package com.devbank.user.management.impl.mongo.mapper;
 
 import com.devbank.user.management.api.DTO.UserDTO;
+import com.devbank.user.management.api.enums.Role;
 import com.devbank.user.management.impl.mongo.document.UserDocument;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,7 @@ public class UserMapper {
         dto.setName(user.getName());
         dto.setSurname(user.getSurname());
         dto.setPhoneNumber(user.getPhoneNumber());
+        dto.setRole(user.getRole());
         return dto;
     }
 
@@ -29,6 +31,7 @@ public class UserMapper {
         user.setName(dto.getName());
         user.setSurname(dto.getSurname());
         user.setPhoneNumber(dto.getPhoneNumber());
+        user.getRole();
         return user;
     }
 

@@ -19,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -51,7 +52,7 @@ public class UserDocumentControllerTest {
         userDTO.setSurname("Yılmaz");
         userDTO.setTcNumber("12345678901");
         userDTO.setPhoneNumber("5551234567");
-        userDTO.setRole(Role.CUSTOMER);
+        userDTO.setRole(Role.ROLE_CUSTOMER);
 
         when(userService.registerUser(any(UserDTO.class))).thenReturn(userDTO);
 
@@ -99,7 +100,7 @@ public class UserDocumentControllerTest {
         userDTO.setSurname("Yılmaz");
         userDTO.setTcNumber("12345678901");
         userDTO.setPhoneNumber("5551234567");
-        userDTO.setRole(Role.CUSTOMER);
+        userDTO.setRole(Role.ROLE_CUSTOMER);
 
         when(userService.findByTcNumber("12345678901")).thenReturn(Optional.of(userDTO));
 
@@ -123,12 +124,12 @@ public class UserDocumentControllerTest {
     @WithMockUser(username = "testUser", roles = {"USER"})
     void testUpdateUser_Success() throws Exception {
         UserDTO userDTO = new UserDTO();
-        userDTO.setId(1L);
+        userDTO.setId("1");
         userDTO.setName("Mehmet");
         userDTO.setSurname("Yılmaz");
         userDTO.setPhoneNumber("5559876543");
 
-        when(userService.updateUser(eq(1L), any(UserDTO.class))).thenReturn(userDTO);
+        when(userService.updateUser(eq("1"), any(UserDTO.class))).thenReturn(userDTO);
 
         String userJson = """
                 {
@@ -149,7 +150,7 @@ public class UserDocumentControllerTest {
     @Test
     @WithMockUser(username = "testUser", roles = {"USER"})
     void testUpdateUser_NotFound() throws Exception {
-        when(userService.updateUser(eq(1L), any(UserDTO.class))).thenThrow(new UserNotFoundException("User not found"));
+        when(userService.updateUser(eq("1"), any(UserDTO.class))).thenThrow(new UserNotFoundException("User not found"));
 
         String userJson = """
             {
@@ -213,36 +214,32 @@ public class UserDocumentControllerTest {
     @Test
     @WithMockUser(username = "testUser", roles = {"CUSTOMER"})
     void testGetLoginInfo_Success() throws Exception {
-        // Test verisi
         List<LoginInfoDTO> loginInfoList = List.of(
-                new LoginInfoDTO("192.168.1.1", new Date()),
-                new LoginInfoDTO("192.168.1.2", new Date())
+                new LoginInfoDTO("1", "192.168.1.1", LocalDateTime.now()),
+                new LoginInfoDTO("1", "192.168.1.2", LocalDateTime.now())
         );
 
-        // Mock davranışını tanımla
-        when(loginInfoService.getLoginInfoByUserId(1L)).thenReturn(loginInfoList);
+        when(loginInfoService.getLoginInfoByUserId("1")).thenReturn(loginInfoList);
 
-        // GET isteğini gerçekleştir ve sonucu doğrula
         mockMvc.perform(get("/api/users/login-info/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2)) // JSON array uzunluğu
-                .andExpect(jsonPath("$[0].ipAddress").value("192.168.1.1")) // İlk öğe kontrolü
-                .andExpect(jsonPath("$[1].ipAddress").value("192.168.1.2")); // İkinci öğe kontrolü
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].ipAddress").value("192.168.1.1"))
+                .andExpect(jsonPath("$[1].ipAddress").value("192.168.1.2"));
     }
 
     @Test
     @WithMockUser(username = "testUser", roles = {"CUSTOMER"})
     void testGetLoginInfo_NotFound() throws Exception {
-        // Mock davranışını tanımla
-        when(loginInfoService.getLoginInfoByUserId(99L)).thenReturn(List.of());
+        when(loginInfoService.getLoginInfoByUserId("99")).thenReturn(List.of());
 
-        // GET isteğini gerçekleştir ve sonucu doğrula
         mockMvc.perform(get("/api/users/login-info/99")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk()) // Not found değil, boş liste dönüyor
-                .andExpect(jsonPath("$.length()").value(0)); // JSON array uzunluğu 0 olmalı
+                .andExpect(status().isNoContent());
     }
+
+
 
 
 }

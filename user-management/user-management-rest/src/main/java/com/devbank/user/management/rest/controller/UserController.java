@@ -1,27 +1,32 @@
 package com.devbank.user.management.rest.controller;
 
 import com.devbank.error.management.exception.UserNotFoundException;
+import com.devbank.user.management.api.DTO.AuthenticationRequest;
 import com.devbank.user.management.api.DTO.LoginInfoDTO;
 import com.devbank.user.management.api.DTO.UserDTO;
 import com.devbank.user.management.api.service.LoginInfoService;
 import com.devbank.user.management.api.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
 @Validated
 public class UserController {
 
+
     private final UserService userService;
     private final LoginInfoService loginInfoService;
 
-    @Autowired
     public UserController(UserService userService, LoginInfoService loginInfoService) {
         this.userService = userService;
         this.loginInfoService = loginInfoService;
@@ -41,14 +46,18 @@ public class UserController {
                 .orElseThrow(() -> new UserNotFoundException("User not found with T.C. Number : " + tcNumber));
     }
 
-    public ResponseEntity<UserDTO> loginUser(@RequestParam String tcNumber, @RequestParam String phoneNumber, @RequestParam String password) {
-        return userService.authenticateUser(tcNumber, phoneNumber, password)
+    @PostMapping("/login")
+    public ResponseEntity<UserDTO> authenticateUser(
+            @RequestBody AuthenticationRequest authRequest,
+            HttpServletRequest request) {
+        return userService.authenticateUser(authRequest, request)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new UserNotFoundException("Invalid login credentials"));
     }
 
+
     @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> updateUser(@PathVariable String id, @RequestBody UserDTO userDTO) {
         UserDTO updatedUser = userService.updateUser(id, userDTO);
         return ResponseEntity.ok(updatedUser);
     }
@@ -73,11 +82,15 @@ public class UserController {
         }
     }
 
-    @GetMapping("/login-info/{userId}")
-    public ResponseEntity<List<LoginInfoDTO>> getLoginInfo(@PathVariable Long userId) {
-        List<LoginInfoDTO> loginInfos = loginInfoService.getLoginInfoByUserId(userId);
-        return ResponseEntity.ok(loginInfos);
-    }
+    @GetMapping("/login-ingo/{userId}")
+    public ResponseEntity<List<LoginInfoDTO>> getLoginInfoByUserId(@PathVariable String userId) {
+        List<LoginInfoDTO> loginInfoList = loginInfoService.getLoginInfoByUserId(userId);
 
+        if (loginInfoList.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(loginInfoList);
+    }
 
 }

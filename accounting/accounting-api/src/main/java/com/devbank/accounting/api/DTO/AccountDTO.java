@@ -2,6 +2,7 @@ package com.devbank.accounting.api.DTO;
 
 import com.devbank.accounting.api.enums.AccountType;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,9 @@ public class AccountDTO {
     private AccountType accountType; // Hesap türü (CURRENT/SAVINGS)
     @NotNull(message = "Balance cannot be null.")
     private Double balance;        // Bakiye
+    @NotNull(message = "Unique account number cannot be null.")
+    @Pattern(regexp = "^(TR|USD)[0-9]{16}$", message = "Unique Account Number must follow IBAN format.")
+    private String uniqueAccountNumber; //IBAN numarası
     @NotNull(message = "Create date cannot be null.")
     private Date createdAt;        // Açılış tarihi
     private Double interestRate;   // Vadeli hesaplar için faiz oranı

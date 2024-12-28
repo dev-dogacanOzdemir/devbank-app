@@ -4,22 +4,19 @@ import com.devbank.accounting.api.DTO.AccountDTO;
 import com.devbank.accounting.api.enums.AccountType;
 import com.devbank.accounting.api.service.AccountService;
 import com.devbank.error.management.exception.CustomException;
+import com.devbank.error.management.exception.TransferFailedException;
+import com.devbank.error.management.exception.TransferNotFoundException;
 import com.devbank.transfer.api.DTO.TransferDTO;
 import com.devbank.transfer.api.enums.TransferStatus;
 import com.devbank.transfer.api.service.TransferService;
 import com.devbank.transfer.impl.mongo.document.TransferDocument;
-import com.devbank.transfer.impl.mongo.repository.TransferRepository;
 import com.devbank.transfer.impl.mongo.mapper.TransferMapper;
-import com.devbank.error.management.exception.TransferFailedException;
-import com.devbank.error.management.exception.TransferNotFoundException;
+import com.devbank.transfer.impl.mongo.repository.TransferRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

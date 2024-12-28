@@ -4,12 +4,9 @@ import com.devbank.error.management.exception.UserNotFoundException;
 import com.devbank.user.management.api.DTO.AuthenticationRequest;
 import com.devbank.user.management.api.DTO.LoginInfoDTO;
 import com.devbank.user.management.api.DTO.UserDTO;
-import com.devbank.user.management.api.enums.Role;
-import com.devbank.user.management.api.service.LoginInfoService;
+import com.devbank.user.management.impl.mongo.document.UserDocument;
 import com.devbank.user.management.impl.mongo.mapper.LoginInfoMapper;
 import com.devbank.user.management.impl.mongo.mapper.UserMapper;
-import com.devbank.user.management.impl.mongo.document.LoginInfoDocument;
-import com.devbank.user.management.impl.mongo.document.UserDocument;
 import com.devbank.user.management.impl.mongo.repository.LoginInfoRepository;
 import com.devbank.user.management.impl.mongo.repository.UserRepository;
 import com.devbank.user.management.impl.mongo.service.LoginInfoServiceImpl;
@@ -20,11 +17,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Date;
+import java.util.Optional;
 
 import static com.devbank.user.management.api.enums.Role.ROLE_CUSTOMER;
 import static org.junit.jupiter.api.Assertions.*;

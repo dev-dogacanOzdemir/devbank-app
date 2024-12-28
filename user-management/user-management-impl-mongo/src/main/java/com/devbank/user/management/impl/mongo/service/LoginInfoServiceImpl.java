@@ -2,15 +2,12 @@ package com.devbank.user.management.impl.mongo.service;
 
 import com.devbank.user.management.api.DTO.LoginInfoDTO;
 import com.devbank.user.management.api.service.LoginInfoService;
-import com.devbank.user.management.impl.mongo.mapper.LoginInfoMapper;
 import com.devbank.user.management.impl.mongo.document.LoginInfoDocument;
+import com.devbank.user.management.impl.mongo.mapper.LoginInfoMapper;
 import com.devbank.user.management.impl.mongo.repository.LoginInfoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service

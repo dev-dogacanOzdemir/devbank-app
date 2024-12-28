@@ -1,5 +1,6 @@
 package com.devbank.user.management.rest.config;
 
+import com.devbank.user.management.api.enums.Role;
 import com.devbank.user.management.impl.mongo.document.LoginInfoDocument;
 import com.devbank.user.management.impl.mongo.document.UserDocument;
 import com.devbank.user.management.impl.mongo.repository.LoginInfoRepository;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.Date;
-import com.devbank.user.management.api.enums.Role;
 
 @Component
 public class UserManagementDataLoader implements CommandLineRunner {

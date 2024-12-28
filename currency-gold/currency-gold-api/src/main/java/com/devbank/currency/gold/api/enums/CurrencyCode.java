@@ -1,6 +1,5 @@
 package com.devbank.currency.gold.api.enums;
 
-import lombok.Data;
 import lombok.Getter;
 
 @Getter

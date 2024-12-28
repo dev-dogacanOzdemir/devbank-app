@@ -1,7 +1,5 @@
 package com.devbank.currency.gold.impl.mongo.client;
 
-import com.devbank.currency.gold.api.DTO.CurrencyRateDTO;
-import com.devbank.currency.gold.impl.mongo.document.CurrencyRateDocument;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 

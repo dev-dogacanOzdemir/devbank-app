@@ -1,11 +1,9 @@
 package com.devbank.transfer.api.service;
 
-import com.devbank.accounting.api.DTO.AccountDTO;
 import com.devbank.transfer.api.DTO.TransferDTO;
 import com.devbank.transfer.api.enums.TransferStatus;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface TransferService {
 

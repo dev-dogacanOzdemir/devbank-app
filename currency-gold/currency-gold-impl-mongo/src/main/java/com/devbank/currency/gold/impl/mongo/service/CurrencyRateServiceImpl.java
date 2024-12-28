@@ -7,10 +7,10 @@ import com.devbank.currency.gold.api.service.CurrencyRateService;
 import com.devbank.currency.gold.impl.mongo.client.CurrencyApiClient;
 import com.devbank.currency.gold.impl.mongo.document.CurrencyRateDocument;
 import com.devbank.currency.gold.impl.mongo.repository.CurrencyRateRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;

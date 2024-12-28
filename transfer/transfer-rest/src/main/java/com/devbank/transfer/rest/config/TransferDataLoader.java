@@ -6,9 +6,7 @@ import com.devbank.transfer.impl.mongo.repository.TransferRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Component
 public class TransferDataLoader implements CommandLineRunner {

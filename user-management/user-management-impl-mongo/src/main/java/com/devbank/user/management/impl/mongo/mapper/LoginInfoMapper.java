@@ -6,7 +6,6 @@ import com.devbank.user.management.impl.mongo.document.UserDocument;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Component
 public class LoginInfoMapper {

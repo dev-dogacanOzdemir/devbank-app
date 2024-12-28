@@ -3,7 +3,6 @@ package com.devbank.transfer.impl.mongo.service;
 import com.devbank.accounting.api.DTO.AccountDTO;
 import com.devbank.accounting.api.enums.AccountType;
 import com.devbank.accounting.api.service.AccountService;
-import com.devbank.error.management.exception.CustomException;
 import com.devbank.error.management.exception.TransferFailedException;
 import com.devbank.transfer.api.DTO.TransferDTO;
 import com.devbank.transfer.api.enums.TransferStatus;
@@ -20,10 +19,10 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
-
-import static com.devbank.accounting.api.enums.AccountType.CURRENT;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class TransferServiceImplTest {
 

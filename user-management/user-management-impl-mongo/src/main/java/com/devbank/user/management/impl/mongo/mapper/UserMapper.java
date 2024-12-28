@@ -1,7 +1,6 @@
 package com.devbank.user.management.impl.mongo.mapper;
 
 import com.devbank.user.management.api.DTO.UserDTO;
-import com.devbank.user.management.api.enums.Role;
 import com.devbank.user.management.impl.mongo.document.UserDocument;
 import org.springframework.stereotype.Component;
 

@@ -6,6 +6,7 @@ import com.devbank.accounting.impl.mongo.repository.AccountRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.Calendar;
 import java.util.Date;
 
 @Component
@@ -20,10 +21,36 @@ public class AccountingDataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) {
         if (accountRepository.count() == 0) {
-            AccountDocument account = new AccountDocument(1L, 100L, AccountType.SAVINGS, 1000.0,"TR1234567891234567", new Date(), 1.5, null);
-            accountRepository.save(account);
-            System.out.println("Accounting initial data loaded.");
+            // Vadesiz hesap
+            AccountDocument savingsAccount = new AccountDocument(
+                    "1L",
+                    "100L",
+                    AccountType.SAVINGS,
+                    5000.0, // Başlangıç bakiyesi
+                    "TR1234567891234567",
+                    new Date(),
+                    null,  // Faiz oranı yok
+                    null   // Vade tarihi yok
+            );
+            accountRepository.save(savingsAccount);
+
+            // Vadeli hesap
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.MONTH, 12); // 12 ay vadeli hesap
+
+            AccountDocument fixedAccount = new AccountDocument(
+                    "2L",
+                    "101L",
+                    AccountType.CURRENT,
+                    10000.0, // Başlangıç bakiyesi
+                    "TR9876543219876543",
+                    new Date(),
+                    2.0,    // Faiz oranı %2
+                    calendar.getTime() // Vade bitiş tarihi
+            );
+            accountRepository.save(fixedAccount);
+
+            System.out.println("Accounting initial data loaded with two accounts.");
         }
     }
-
 }

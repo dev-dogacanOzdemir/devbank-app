@@ -6,10 +6,10 @@ import java.util.List;
 
 public interface AccountService {
     AccountDTO createAccount(AccountDTO accountDTO);
-    AccountDTO updateAccount(Long accountId, AccountDTO accountDTO);
-    AccountDTO getAccountById(Long accountId);
-    List<AccountDTO> getAccountsByCustomerId(Long customerId);
+    AccountDTO updateAccount(String accountId, AccountDTO accountDTO);
+    AccountDTO getAccountById(String accountId);
+    List<AccountDTO> getAccountsByCustomerId(String customerId);
     List<AccountDTO> getAllAccounts();
-    void deleteAccount(Long accountId);
-    void updateAccountBalance(Long accountId, Double newBalance);
+    void deleteAccount(String accountId);
+    void updateAccountBalance(String accountId, Double newBalance);
 }

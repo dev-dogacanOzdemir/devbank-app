@@ -83,4 +83,25 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDetails);
     }
 
+    @ExceptionHandler(TransferFailedException.class)
+    public ResponseEntity<ErrorDetails> handleTransferFailedException(TransferNotFoundException ex) {
+        ErrorDetails errorDetails = new ErrorDetails(
+                new Date(),
+                "TRANSFER_FAILED",
+                ex.getMessage(),
+                "Transfer failed."
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDetails);
+    }
+
+    @ExceptionHandler(TransferNotFoundException.class)
+    public ResponseEntity<ErrorDetails> handleTransferNotFoundException(TransferNotFoundException ex) {
+        ErrorDetails errorDetails = new ErrorDetails(
+                new Date(),
+                "TRANSFER_NOT_FOUND",
+                ex.getMessage(),
+                "Transfer not found."
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDetails);
+    }
 }

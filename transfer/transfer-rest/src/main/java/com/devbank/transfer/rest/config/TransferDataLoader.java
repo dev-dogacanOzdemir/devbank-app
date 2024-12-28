@@ -7,6 +7,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Component
@@ -21,7 +22,15 @@ public class TransferDataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) {
         if (transferRepository.count() == 0) {
-            TransferDocument transfer = new TransferDocument(1L, 1L, 2L, 500.0, new Date(), "USD", TransferStatus.COMPLETED);
+            TransferDocument transfer = new TransferDocument(
+                    null, // ID otomatik oluşturulur
+                    "1L", // Gönderici hesap ID
+                    "2L", // Alıcı hesap ID
+                    500.0, // Transfer miktarı
+                    "Initial transfer", // Açıklama
+                    TransferStatus.COMPLETED, // Durum
+                    LocalDateTime.now() // Transfer zamanı
+            );
             transferRepository.save(transfer);
             System.out.println("Transfer initial data loaded.");
         }

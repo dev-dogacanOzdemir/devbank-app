@@ -23,12 +23,21 @@ public class SecurityConfig {
                                 "/api/users/login",
                                 "/api/users/register",
                                 "/api/users/password-reset/request",
-                                "/api/users/password-reset/confirm",
-                                "/api/users/{tcNumber}"
+                                "/api/users/password-reset/confirm"
                         ).permitAll() // Herkese açık yollar
 
-                        .requestMatchers("/api/users/**").hasAnyAuthority("ADMIN", "CUSTOMER")
-
+                        .requestMatchers(
+                                "/api/users/**"
+                        ).hasAnyAuthority("ADMIN", "CUSTOMER")
+                        .requestMatchers(
+                                "/api/users/{tcNumber}",
+                                "/api/transfers/account/{accountId}",
+                                "/api/transfers",
+                                "/api/transfers/scheduled"
+                        ).hasAnyAuthority("USER","ADMIN")
+                        .requestMatchers(
+                                "/api/transfers/{transferId}/status"
+                        ).hasAnyAuthority("ADMIN")
                         .anyRequest().authenticated() // Diğer istekler için doğrulama iste
                 );
         System.out.println("Security Config intilized");

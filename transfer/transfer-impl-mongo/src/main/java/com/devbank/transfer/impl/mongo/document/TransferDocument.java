@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -16,11 +17,17 @@ import java.util.Date;
 public class TransferDocument {
 
     @Id
-    private Long transferId;
-    private Long fromAccountId;
-    private Long toAccountId;
-    private Double amount;
-    private Date transferDate;
-    private String currency;
-    private TransferStatus status;
+    private String id; // Transfer ID
+
+    private String senderAccountId; // Gönderici Hesap ID
+
+    private String receiverAccountId; // Alıcı Hesap ID
+
+    private Double amount; // Transfer edilen tutar
+
+    private String description; // Transfer açıklaması
+
+    private TransferStatus status; // Transfer durumu
+
+    private LocalDateTime transferTime; // Transfer zamanı
 }

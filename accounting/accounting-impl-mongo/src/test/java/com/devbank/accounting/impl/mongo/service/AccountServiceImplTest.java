@@ -36,10 +36,10 @@ class AccountServiceImplTest {
 
     @Test
     void testCreateAccount_Success() {
-        AccountDTO accountDTO = new AccountDTO(null, 1001L, AccountType.CURRENT, 5000.0, "TR1234567891234567", null, null,null);
-        AccountDocument accountDocument = new AccountDocument(null, 1001L, AccountType.CURRENT, 5000.0, "TR1234567891234567", new Date(), null, null);
-        AccountDocument savedDocument = new AccountDocument(1L, 1001L, AccountType.CURRENT, 5000.0, "TR1234567891234567", new Date(), null, null);
-        AccountDTO expectedDTO = new AccountDTO(1L, 1001L, AccountType.CURRENT, 5000.0, "TR1234567891234567", new Date(), null, null);
+        AccountDTO accountDTO = new AccountDTO(null, "1001", AccountType.CURRENT, 5000.0, "TR1234567891234567", null, null, null);
+        AccountDocument accountDocument = new AccountDocument(null, "1001", AccountType.CURRENT, 5000.0, "TR1234567891234567", new Date(), null, null);
+        AccountDocument savedDocument = new AccountDocument("1", "1001", AccountType.CURRENT, 5000.0, "TR1234567891234567", new Date(), null, null);
+        AccountDTO expectedDTO = new AccountDTO("1", "1001", AccountType.CURRENT, 5000.0, "TR1234567891234567", new Date(), null, null);
 
         when(accountMapper.toDocument(accountDTO)).thenReturn(accountDocument);
         when(accountRepository.save(accountDocument)).thenReturn(savedDocument);
@@ -48,77 +48,75 @@ class AccountServiceImplTest {
         AccountDTO result = accountService.createAccount(accountDTO);
 
         assertNotNull(result);
-        assertEquals(1L, result.getAccountId());
+        assertEquals("1", result.getAccountId());
         assertEquals("TR1234567891234567", result.getUniqueAccountNumber());
         verify(accountRepository, times(1)).save(accountDocument);
     }
 
     @Test
     void testGetAccountById_Success() {
-        AccountDocument accountDocument = new AccountDocument(1L, 1001L, AccountType.CURRENT, 5000.0, "TR1234567891234567", new Date(), null, null);
-        AccountDTO accountDTO = new AccountDTO(1L, 1001L, AccountType.CURRENT, 5000.0, "TR1234567891234567", new Date(), null, null);
+        AccountDocument accountDocument = new AccountDocument("1", "1001", AccountType.CURRENT, 5000.0, "TR1234567891234567", new Date(), null, null);
+        AccountDTO accountDTO = new AccountDTO("1", "1001", AccountType.CURRENT, 5000.0, "TR1234567891234567", new Date(), null, null);
 
-        when(accountRepository.findById(1L)).thenReturn(Optional.of(accountDocument));
+        when(accountRepository.findById("1")).thenReturn(Optional.of(accountDocument));
         when(accountMapper.toDTO(accountDocument)).thenReturn(accountDTO);
 
-        AccountDTO result = accountService.getAccountById(1L);
+        AccountDTO result = accountService.getAccountById("1");
 
         assertNotNull(result);
-        assertEquals(1L, result.getAccountId());
+        assertEquals("1", result.getAccountId());
         assertEquals("TR1234567891234567", result.getUniqueAccountNumber());
-        verify(accountRepository, times(1)).findById(1L);
+        verify(accountRepository, times(1)).findById("1");
     }
-
 
     @Test
     void testGetAccountById_NotFound() {
-        when(accountRepository.findById(1L)).thenReturn(Optional.empty());
+        when(accountRepository.findById("1")).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(AccountNotFoundException.class, () -> accountService.getAccountById(1L));
+        Exception exception = assertThrows(AccountNotFoundException.class, () -> accountService.getAccountById("1"));
 
         assertEquals("Account not found with ID: 1", exception.getMessage());
-        verify(accountRepository, times(1)).findById(1L);
+        verify(accountRepository, times(1)).findById("1");
     }
 
     @Test
     void testUpdateAccount_Success() {
-        AccountDTO accountDTO = new AccountDTO(1L, 1001L, AccountType.CURRENT, 8000.0, "TR1234567891234567", null, null,null);
-        AccountDocument existingDocument = new AccountDocument(1L, 1001L, AccountType.CURRENT, 5000.0, "TR1234567891234567", new Date(), null, null);
-        AccountDocument updatedDocument = new AccountDocument(1L, 1001L, AccountType.CURRENT, 8000.0, "TR1234567891234567", new Date(), null, null);
-        AccountDTO expectedDTO = new AccountDTO(1L, 1001L, AccountType.CURRENT, 8000.0, "TR1234567891234567", new Date(), null, null);
+        AccountDTO accountDTO = new AccountDTO("1", "1001", AccountType.CURRENT, 8000.0, "TR1234567891234567", null, null, null);
+        AccountDocument existingDocument = new AccountDocument("1", "1001", AccountType.CURRENT, 5000.0, "TR1234567891234567", new Date(), null, null);
+        AccountDocument updatedDocument = new AccountDocument("1", "1001", AccountType.CURRENT, 8000.0, "TR1234567891234567", new Date(), null, null);
+        AccountDTO expectedDTO = new AccountDTO("1", "1001", AccountType.CURRENT, 8000.0, "TR1234567891234567", new Date(), null, null);
 
-        when(accountRepository.findById(1L)).thenReturn(Optional.of(existingDocument));
+        when(accountRepository.findById("1")).thenReturn(Optional.of(existingDocument));
         when(accountRepository.save(existingDocument)).thenReturn(updatedDocument);
         when(accountMapper.toDTO(updatedDocument)).thenReturn(expectedDTO);
 
-        AccountDTO result = accountService.updateAccount(1L, accountDTO);
+        AccountDTO result = accountService.updateAccount("1", accountDTO);
 
         assertNotNull(result);
         assertEquals(8000.0, result.getBalance());
         assertEquals("TR1234567891234567", result.getUniqueAccountNumber());
-        verify(accountRepository, times(1)).findById(1L);
+        verify(accountRepository, times(1)).findById("1");
         verify(accountRepository, times(1)).save(existingDocument);
     }
 
-
     @Test
     void testDeleteAccount_Success() {
-        when(accountRepository.existsById(1L)).thenReturn(true);
+        when(accountRepository.existsById("1")).thenReturn(true);
 
-        accountService.deleteAccount(1L);
+        accountService.deleteAccount("1");
 
-        verify(accountRepository, times(1)).existsById(1L);
-        verify(accountRepository, times(1)).deleteById(1L);
+        verify(accountRepository, times(1)).existsById("1");
+        verify(accountRepository, times(1)).deleteById("1");
     }
 
     @Test
     void testDeleteAccount_NotFound() {
-        when(accountRepository.existsById(1L)).thenReturn(false);
+        when(accountRepository.existsById("1")).thenReturn(false);
 
-        Exception exception = assertThrows(AccountNotFoundException.class, () -> accountService.deleteAccount(1L));
+        Exception exception = assertThrows(AccountNotFoundException.class, () -> accountService.deleteAccount("1"));
 
         assertEquals("Account not found with ID: 1", exception.getMessage());
-        verify(accountRepository, times(1)).existsById(1L);
-        verify(accountRepository, never()).deleteById(1L);
+        verify(accountRepository, times(1)).existsById("1");
+        verify(accountRepository, never()).deleteById("1");
     }
 }

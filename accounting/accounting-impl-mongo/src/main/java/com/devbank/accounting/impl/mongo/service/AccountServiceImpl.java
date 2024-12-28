@@ -41,14 +41,14 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDTO getAccountById(Long accountId) {
+    public AccountDTO getAccountById(String accountId) {
         return accountRepository.findById(accountId)
                 .map(accountMapper::toDTO)
                 .orElseThrow(() -> new AccountNotFoundException("Account not found with ID: " + accountId));
     }
 
     @Override
-    public List<AccountDTO> getAccountsByCustomerId(Long customerId) {
+    public List<AccountDTO> getAccountsByCustomerId(String customerId) {
         List<AccountDocument> documents = accountRepository.findByCustomerId(customerId);
         return documents.stream()
                 .map(accountMapper::toDTO)
@@ -64,38 +64,35 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDTO updateAccount(Long accountId, AccountDTO accountDTO) {
+    public AccountDTO updateAccount(String accountId, AccountDTO accountDTO) {
         AccountDocument existingDocument = accountRepository.findById(accountId)
                 .orElseThrow(() -> new AccountNotFoundException("Account not found with ID: " + accountId));
 
-        // Alanları güncelle
         existingDocument.setAccountType(accountDTO.getAccountType());
         existingDocument.setBalance(accountDTO.getBalance());
         existingDocument.setInterestRate(accountDTO.getInterestRate());
         existingDocument.setMaturityDate(accountDTO.getMaturityDate());
-        // Created at değiştirilemez
         if (accountDTO.getCreatedAt() != null) {
             throw new IllegalArgumentException("CreatedAt cannot be modified");
         }
-        // Güncellenmiş hesabı kaydet
         AccountDocument updatedDocument = accountRepository.save(existingDocument);
         return accountMapper.toDTO(updatedDocument);
     }
 
     @Override
-    public void deleteAccount(Long accountId) {
+    public void deleteAccount(String accountId) {
         if (!accountRepository.existsById(accountId)) {
             throw new AccountNotFoundException("Account not found with ID: " + accountId);
         }
         accountRepository.deleteById(accountId);
     }
 
-    public void updateAccountBalance(Long accountId, Double newBalance) {
+    public void updateAccountBalance(String accountId, Double newBalance) {
         AccountDocument account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new AccountNotFoundException("Account not found"));
 
         account.setBalance(newBalance);
-        accountRepository.save(account); // Yeni bakiye güncellemesi
+        accountRepository.save(account);
     }
 
 }

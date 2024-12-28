@@ -17,8 +17,8 @@ import java.util.Date;
 public class AccountDocument {
 
     @Id
-    private Long accountId;
-    private Long customerId;
+    private String accountId;
+    private String customerId;
     private AccountType accountType;
     private Double balance;
     private String uniqueAccountNumber;

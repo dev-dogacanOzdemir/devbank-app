@@ -1,8 +1,10 @@
 package com.devbank.transfer.rest.controller;
 
 import com.devbank.transfer.api.DTO.TransferDTO;
+import com.devbank.transfer.api.enums.TransferStatus;
 import com.devbank.transfer.api.service.TransferService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,30 +13,34 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/transfers")
+@RequiredArgsConstructor
 public class TransferController {
 
-    @Autowired
-    private TransferService transferService;
+    private final TransferService transferService;
 
     @PostMapping
     public ResponseEntity<TransferDTO> createTransfer(@Valid @RequestBody TransferDTO transferDTO) {
-        return ResponseEntity.ok(transferService.createTransfer(transferDTO));
+        TransferDTO createdTransfer = transferService.createTransfer(transferDTO);
+        return ResponseEntity.ok(createdTransfer);
     }
 
-    @GetMapping("/accounts/{accountId}")
-    public ResponseEntity<List<TransferDTO>> getTransfersByAccount(@PathVariable Long accountId) {
-        return ResponseEntity.ok(transferService.getTransfersByAccount(accountId));
+    @PostMapping("/scheduled")
+    public ResponseEntity<TransferDTO> createScheduledTransfer(@Valid @RequestBody TransferDTO transferDTO) {
+        TransferDTO createdTransfer = transferService.createScheduledTransfer(transferDTO);
+        return ResponseEntity.ok(createdTransfer);
     }
 
-    @PatchMapping("/{transferId}/complete")
-    public ResponseEntity<Void> completeTransfer(@PathVariable Long transferId) {
-        transferService.completeTransfer(transferId);
-        return ResponseEntity.ok().build();
+    @GetMapping("/account/{accountId}")
+    public ResponseEntity<List<TransferDTO>> getTransfersByAccountId(@PathVariable String accountId) {
+        List<TransferDTO> transfers = transferService.getTransfersByAccountId(accountId);
+        return ResponseEntity.ok(transfers);
     }
 
-    @PatchMapping("/{transferId}/fail")
-    public ResponseEntity<Void> failTransfer(@PathVariable Long transferId) {
-        transferService.failTransfer(transferId);
-        return ResponseEntity.ok().build();
+    @PutMapping("/{transferId}/status")
+    public ResponseEntity<TransferDTO> updateTransferStatus(
+            @PathVariable String transferId,
+            @RequestParam TransferStatus status) {
+        TransferDTO updatedTransfer = transferService.updateTransferStatus(transferId, status);
+        return ResponseEntity.ok(updatedTransfer);
     }
 }

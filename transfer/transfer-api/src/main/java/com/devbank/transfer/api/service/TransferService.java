@@ -1,20 +1,20 @@
 package com.devbank.transfer.api.service;
 
+import com.devbank.accounting.api.DTO.AccountDTO;
 import com.devbank.transfer.api.DTO.TransferDTO;
+import com.devbank.transfer.api.enums.TransferStatus;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TransferService {
 
-    TransferDTO createTransfer(TransferDTO transferDTO);
+    TransferDTO createTransfer(TransferDTO transferDTO); // Yeni transfer oluşturma
 
-    // Hesabın transfer geçmişi
-    List<TransferDTO> getTransfersByAccount(Long accountId);
+    TransferDTO createScheduledTransfer(TransferDTO transferDTO); // İleri tarihli transfer oluşturma
 
-    // Kullanıcının transfer geçmişi
-    List<TransferDTO> getTransferHistory(Long customerId);
+    List<TransferDTO> getTransfersByAccountId(String accountId); // Hesap ID'ye göre tüm transferleri listeleme
 
-    void completeTransfer(Long transferId);
-
-    void failTransfer(Long transferId);
+    TransferDTO updateTransferStatus(String transferId, TransferStatus status); // Transfer durumunu güncelleme
 }
+

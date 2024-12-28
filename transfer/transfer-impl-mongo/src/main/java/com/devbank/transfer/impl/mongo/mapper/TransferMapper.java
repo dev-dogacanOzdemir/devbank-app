@@ -4,29 +4,31 @@ import com.devbank.transfer.api.DTO.TransferDTO;
 import com.devbank.transfer.impl.mongo.document.TransferDocument;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @Component
 public class TransferMapper {
-    public TransferDTO mapToDTO(TransferDocument document) {
+    public TransferDTO toDTO(TransferDocument document) {
         return new TransferDTO(
-                document.getTransferId(),
-                document.getFromAccountId(),
-                document.getToAccountId(),
+                document.getId(),
+                document.getSenderAccountId(),
+                document.getReceiverAccountId(),
                 document.getAmount(),
-                document.getTransferDate(),
-                document.getCurrency(),
-                document.getStatus()
+                document.getDescription(),
+                document.getStatus(),
+                document.getTransferTime() != null ? document.getTransferTime() : LocalDateTime.now()
         );
     }
 
-    public TransferDocument mapToDocument(TransferDTO dto) {
+    public TransferDocument toDocument(TransferDTO dto) {
         return new TransferDocument(
-                dto.getTransferId(),
-                dto.getFromAccountId(),
-                dto.getToAccountId(),
+                dto.getId(),
+                dto.getSenderAccountId(),
+                dto.getReceiverAccountId(),
                 dto.getAmount(),
-                dto.getTransferDate(),
-                dto.getCurrency(),
-                dto.getStatus()
+                dto.getDescription(),
+                dto.getStatus(),
+                dto.getTransferTime() != null ? dto.getTransferTime() : LocalDateTime.now() // Default değer
         );
     }
 }

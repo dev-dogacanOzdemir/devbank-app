@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -13,21 +14,21 @@ import java.util.Date;
 @NoArgsConstructor
 public class TransferDTO {
 
-    private Long transferId;
+    private String id; // Benzersiz transfer ID
 
-    @NotNull(message = "From Account ID cannot be null")
-    private Long fromAccountId;
+    @NotNull
+    private String senderAccountId; // Gönderici Hesap ID
 
-    @NotNull(message = "To Account ID cannot be null")
-    private Long toAccountId;
+    @NotNull
+    private String receiverAccountId; // Alıcı Hesap ID
 
-    @NotNull(message = "Amount cannot be null")
-    private Double amount;
+    @NotNull
+    private Double amount; // Transfer edilen tutar
 
-    private Date transferDate;
+    private String description; // Transfer açıklaması
 
-    @NotNull(message = "Currency cannot be null")
-    private String currency;
+    @NotNull
+    private TransferStatus status = TransferStatus.PENDING; // Transfer durumu
 
-    private TransferStatus status;
+    private LocalDateTime transferTime; // Transferin zamanı
 }

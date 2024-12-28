@@ -22,4 +22,11 @@ public class AccountDTO {
     private Date createdAt;        // Açılış tarihi
     private Double interestRate;   // Vadeli hesaplar için faiz oranı
     private Date maturityDate;     // Vadeli hesaplar için vade bitiş tarihi
+
+    public AccountDTO(String accountId, AccountType accountType, Double balance) {
+        this.accountId = accountId;
+        this.accountType = accountType;
+        this.balance = balance;
+    }
+
 }

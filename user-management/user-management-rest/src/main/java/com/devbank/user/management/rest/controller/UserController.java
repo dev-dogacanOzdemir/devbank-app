@@ -2,6 +2,7 @@ package com.devbank.user.management.rest.controller;
 
 import com.devbank.error.management.exception.UserNotFoundException;
 import com.devbank.user.management.api.DTO.AuthenticationRequest;
+import com.devbank.user.management.api.DTO.AuthenticationResponse;
 import com.devbank.user.management.api.DTO.LoginInfoDTO;
 import com.devbank.user.management.api.DTO.UserDTO;
 import com.devbank.user.management.api.service.LoginInfoService;
@@ -78,7 +79,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/login-ingo/{userId}")
+    @GetMapping("/login-info/{userId}")
     public ResponseEntity<List<LoginInfoDTO>> getLoginInfoByUserId(@PathVariable String userId) {
         List<LoginInfoDTO> loginInfoList = loginInfoService.getLoginInfoByUserId(userId);
 
@@ -87,6 +88,12 @@ public class UserController {
         }
 
         return ResponseEntity.ok(loginInfoList);
+    }
+
+    @GetMapping("/validate/{userId}")
+    public ResponseEntity<?> validateUser(@PathVariable String userId) {
+        AuthenticationResponse response = userService.validateUser(userId);
+        return ResponseEntity.ok(response);
     }
 
 }

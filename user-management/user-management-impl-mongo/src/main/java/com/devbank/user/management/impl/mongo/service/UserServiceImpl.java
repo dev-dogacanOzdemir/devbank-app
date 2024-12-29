@@ -2,6 +2,7 @@ package com.devbank.user.management.impl.mongo.service;
 
 import com.devbank.error.management.exception.UserNotFoundException;
 import com.devbank.user.management.api.DTO.AuthenticationRequest;
+import com.devbank.user.management.api.DTO.AuthenticationResponse;
 import com.devbank.user.management.api.DTO.LoginInfoDTO;
 import com.devbank.user.management.api.DTO.UserDTO;
 import com.devbank.user.management.api.service.LoginInfoService;
@@ -133,4 +134,10 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
+    @Override
+    public AuthenticationResponse validateUser(String userId) {
+        UserDocument user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
+        return new AuthenticationResponse(user.getId(), user.getRole());
+    }
 }

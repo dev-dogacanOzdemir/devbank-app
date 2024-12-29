@@ -1,6 +1,7 @@
 package com.devbank.user.management.api.service;
 
 import com.devbank.user.management.api.DTO.AuthenticationRequest;
+import com.devbank.user.management.api.DTO.AuthenticationResponse;
 import com.devbank.user.management.api.DTO.UserDTO;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -25,5 +26,7 @@ public interface UserService {
 
     // Parola sıfırlama
     boolean resetPassword(String tcNumber, String newPassword);
+
+    AuthenticationResponse validateUser(String userId);
 
 }

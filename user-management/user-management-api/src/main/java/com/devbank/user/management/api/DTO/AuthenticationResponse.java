@@ -1,13 +1,15 @@
 package com.devbank.user.management.api.DTO;
 
+import com.devbank.user.management.api.enums.Role;
+import lombok.*;
+import org.springframework.context.annotation.Bean;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class AuthenticationResponse {
-    private String token;
+    private String userId;
+    private Role role;
 
-    public AuthenticationResponse(String token) {
-        this.token = token;
-    }
-
-    public String getToken() {
-        return token;
-    }
 }

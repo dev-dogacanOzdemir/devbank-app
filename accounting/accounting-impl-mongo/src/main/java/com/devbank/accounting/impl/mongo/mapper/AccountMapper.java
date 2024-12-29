@@ -26,7 +26,7 @@ public class AccountMapper {
         dto.setCustomerId(document.getCustomerId());
         dto.setAccountType(document.getAccountType());
         dto.setBalance(document.getBalance());
-        dto.setUniqueAccountNumber(dto.getUniqueAccountNumber());
+        dto.setUniqueAccountNumber(document.getUniqueAccountNumber());
         dto.setCreatedAt(document.getCreatedAt());
         dto.setInterestRate(document.getInterestRate());
         dto.setMaturityDate(document.getMaturityDate());

@@ -4,12 +4,12 @@ import com.devbank.accounting.api.enums.AccountType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Date;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AccountDTO {
 
     private String accountId;        // Hesap ID
@@ -21,10 +21,5 @@ public class AccountDTO {
     private Double interestRate;   // Vadeli hesaplar için faiz oranı
     private Date maturityDate;     // Vadeli hesaplar için vade bitiş tarihi
 
-    public AccountDTO(String accountId, AccountType accountType, Double balance) {
-        this.accountId = accountId;
-        this.accountType = accountType;
-        this.balance = balance;
-    }
 
 }

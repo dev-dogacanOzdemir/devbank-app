@@ -29,6 +29,12 @@ public class TransferController {
         return ResponseEntity.ok(createdTransfer);
     }
 
+    @GetMapping
+    public ResponseEntity<List<TransferDTO>> getAllTransfers() {
+        List<TransferDTO> transfers = transferService.getAllTransfers();
+        return ResponseEntity.ok(transfers);
+    }
+
     @GetMapping("/account/{accountId}")
     public ResponseEntity<List<TransferDTO>> getTransfersByAccountId(@PathVariable String accountId) {
         List<TransferDTO> transfers = transferService.getTransfersByAccountId(accountId);

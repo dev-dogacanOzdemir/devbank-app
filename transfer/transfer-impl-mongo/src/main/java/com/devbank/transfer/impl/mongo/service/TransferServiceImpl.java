@@ -78,6 +78,12 @@ public class TransferServiceImpl implements TransferService {
         return transferMapper.toDTO(savedDocument);
     }
 
+    public List<TransferDTO> getAllTransfers() {
+        List<TransferDocument> transferDocuments = transferRepository.findAll();
+        return transferDocuments.stream()
+                .map(transferMapper::toDTO)
+                .collect(Collectors.toList());
+    }
     @Override
     public List<TransferDTO> getTransfersByAccountId(String accountId) {
         List<TransferDocument> transfers = transferRepository.findBySenderAccountIdOrReceiverAccountId(accountId, accountId);

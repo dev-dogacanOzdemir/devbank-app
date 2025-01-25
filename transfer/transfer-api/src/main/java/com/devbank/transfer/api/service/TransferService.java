@@ -14,5 +14,7 @@ public interface TransferService {
     List<TransferDTO> getTransfersByAccountId(String accountId); // Hesap ID'ye göre tüm transferleri listeleme
 
     TransferDTO updateTransferStatus(String transferId, TransferStatus status); // Transfer durumunu güncelleme
+
+    public List<TransferDTO> getAllTransfers();
 }
 

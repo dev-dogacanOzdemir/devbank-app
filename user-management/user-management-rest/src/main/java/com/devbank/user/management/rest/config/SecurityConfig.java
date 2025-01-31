@@ -41,6 +41,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/transfers/{transferId}/status"
                         ).hasAnyAuthority("ADMIN")
+                        .requestMatchers("/api/cards/create", "/api/cards/update-status", "/api/cards/update-limit").hasAuthority("ADMIN")
+                        .requestMatchers("/api/cards/get/{cardId}", "/api/cards/user/{userId}", "/api/cards/{cardId}/transactions").hasAnyAuthority("CUSTOMER", "ADMIN")
                         .anyRequest().authenticated() // Diğer istekler için doğrulama iste
                 );
         System.out.println("Security Config intilized");

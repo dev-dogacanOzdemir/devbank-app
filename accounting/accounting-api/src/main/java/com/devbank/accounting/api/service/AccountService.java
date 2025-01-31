@@ -12,4 +12,5 @@ public interface AccountService {
     List<AccountDTO> getAllAccounts();
     void deleteAccount(String accountId);
     void updateAccountBalance(String accountId, Double newBalance);
+    void withdrawFromAccount(String accountId, Double amount);
 }

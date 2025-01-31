@@ -30,6 +30,7 @@
 		<module>user-management</module>
         <module>transfer</module>
         <module>currency-gold</module>
+        <module>card-management</module>
     </modules>
 
 	<dependencyManagement>

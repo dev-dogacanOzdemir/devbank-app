@@ -9,7 +9,8 @@ import lombok.RequiredArgsConstructor;
 import java.util.Date;
 
 @Data
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class AccountDTO {
 
     private String accountId;        // Hesap ID

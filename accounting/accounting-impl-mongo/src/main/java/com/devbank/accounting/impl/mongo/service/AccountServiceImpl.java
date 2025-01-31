@@ -7,6 +7,7 @@ import com.devbank.accounting.impl.mongo.mapper.AccountMapper;
 import com.devbank.accounting.impl.mongo.repository.AccountRepository;
 import com.devbank.error.management.exception.AccountNotFoundException;
 import com.devbank.error.management.exception.CustomException;
+import com.devbank.error.management.exception.InsufficientBalanceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -87,12 +88,26 @@ public class AccountServiceImpl implements AccountService {
         accountRepository.deleteById(accountId);
     }
 
+    @Override
     public void updateAccountBalance(String accountId, Double newBalance) {
         AccountDocument account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new AccountNotFoundException("Account not found"));
 
         account.setBalance(newBalance);
         accountRepository.save(account);
+    }
+
+    @Override
+    public void withdrawFromAccount(String accountId, Double amount) {
+        AccountDocument account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new AccountNotFoundException("Account not found: " + accountId));
+
+        if (account.getBalance() < amount) {
+            throw new InsufficientBalanceException("Insufficient funds in account: " + accountId);
+        }
+
+        // Yeni bakiye hesaplanarak updateAccountBalance çağrılıyor
+        updateAccountBalance(accountId, account.getBalance() - amount);
     }
 
 }

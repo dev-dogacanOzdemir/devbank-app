@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: card-management-service
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/devbank
+      database: devbank
+      auto-index-creation: true
+
+server:
+  port: 2005

@@ -11,7 +11,7 @@
     <groupId>com.devbank</groupId>
     <artifactId>accounting-impl-mongo</artifactId>
     <version>1.0.0</version>
-    <name>Account Implementation MongoDB</name>
+    <name>Accounting Implementation MongoDB</name>
 
     <dependencies>
         <!-- Account API -->

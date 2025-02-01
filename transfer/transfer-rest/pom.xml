@@ -6,7 +6,12 @@
         <artifactId>transfer</artifactId>
         <version>1.0.0</version>
     </parent>
+
+    <groupId>com.devbank</groupId>
     <artifactId>transfer-rest</artifactId>
+    <version>1.0.0</version>
+    <name>Transfer REST Endpoint Module</name>
+
     <dependencies>
         <!-- Dependencies for REST controllers -->
         <dependency>

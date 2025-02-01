@@ -5,36 +5,19 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.devbank</groupId>
-        <artifactId>currency-gold</artifactId>
+        <artifactId>loan-management</artifactId>
         <version>1.0.0</version>
     </parent>
 
     <groupId>com.devbank</groupId>
-    <artifactId>currency-gold-api</artifactId>
+    <artifactId>loan-management-rest</artifactId>
     <version>1.0.0</version>
-    <name>Currency-Gold API Module</name>
+    <name>Loan Management REST Endpoint Module</name>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>jakarta.validation</groupId>
-            <artifactId>jakarta.validation-api</artifactId>
-            <version>3.0.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.28</version>
-        </dependency>
-    </dependencies>
 
 </project>

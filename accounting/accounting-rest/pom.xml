@@ -12,7 +12,7 @@
     <artifactId>accounting-rest</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
-    <name>Account Endpoint Module</name>
+    <name>Accounting REST Endpoint Module</name>
 
     <dependencies>
         <!-- Account API -->

@@ -9,7 +9,10 @@
         <version>1.0.0</version>
     </parent>
 
+    <groupId>com.devbank</groupId>
     <artifactId>currency-gold-rest</artifactId>
+    <version>1.0.0</version>
+    <name>Currency-Gold REST Endpoint Module</name>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

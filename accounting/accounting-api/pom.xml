@@ -11,7 +11,7 @@
     <groupId>com.devbank</groupId>
     <artifactId>accounting-api</artifactId>
     <version>1.0.0</version>
-    <name>Account API Module</name>
+    <name>Accounting API Module</name>
 
     <dependencies>
         <!-- Spring Boot Starter Validation -->

@@ -6,7 +6,12 @@
         <artifactId>transfer</artifactId>
         <version>1.0.0</version>
     </parent>
+
+    <groupId>com.devbank</groupId>
     <artifactId>transfer-api</artifactId>
+    <version>1.0.0</version>
+    <name>Transfer API Module</name>
+
     <dependencies>
         <!-- Spring Framework dependencies -->
         <dependency>

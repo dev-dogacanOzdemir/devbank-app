@@ -14,5 +14,7 @@ public interface CardService {
     CardDTO updateCardStatus(String cardId, CardStatus status);
     CardDTO updateCardLimit(String cardId, Double newLimit);
     void processTransaction(CardTransactionDTO transactionDTO);
-
+    List<CardDTO> getAllCards();
+    void deleteCard(String cardId);
+    CardDTO updateCard(String cardId, CardDTO cardDTO);
 }

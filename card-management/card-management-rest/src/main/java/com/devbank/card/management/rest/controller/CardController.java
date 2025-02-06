@@ -50,4 +50,21 @@ public class CardController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping
+    public ResponseEntity<List<CardDTO>> getAllCards() {
+        List<CardDTO> cards = cardService.getAllCards();
+        return ResponseEntity.ok(cards);
+    }
+
+    @DeleteMapping("/{cardId}")
+    public ResponseEntity<Void> deleteCard(@PathVariable String cardId) {
+        cardService.deleteCard(cardId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{cardId}")
+    public ResponseEntity<CardDTO> updateCard(@PathVariable String cardId, @RequestBody CardDTO updatedCard) {
+        CardDTO updated = cardService.updateCard(cardId, updatedCard);
+        return ResponseEntity.ok(updated);
+    }
 }

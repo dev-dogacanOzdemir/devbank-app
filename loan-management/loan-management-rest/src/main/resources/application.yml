@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: loan-management-service
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/devbank
+      database: devbank
+      auto-index-creation: true
+  task:
+    scheduling:
+      pool:
+        size: 5
+server:
+  port: 2006
+debug: true

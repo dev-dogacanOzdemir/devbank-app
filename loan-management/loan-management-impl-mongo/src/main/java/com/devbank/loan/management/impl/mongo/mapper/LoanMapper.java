@@ -2,7 +2,6 @@ package com.devbank.loan.management.impl.mongo.mapper;
 
 import com.devbank.loan.management.api.DTO.LoanResponseDTO;
 import com.devbank.loan.management.impl.mongo.document.LoanDocument;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 @Component

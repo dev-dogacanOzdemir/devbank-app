@@ -1,6 +1,5 @@
 package com.devbank.card.management.impl.mongo.service;
 
-import com.devbank.accounting.api.enums.AccountType;
 import com.devbank.accounting.api.service.AccountService;
 import com.devbank.card.management.api.DTO.CardDTO;
 import com.devbank.card.management.api.DTO.CardTransactionDTO;
@@ -8,7 +7,6 @@ import com.devbank.card.management.api.enums.CardStatus;
 import com.devbank.card.management.api.enums.CardType;
 import com.devbank.card.management.api.service.CardService;
 import com.devbank.card.management.impl.mongo.document.CardDocument;
-import com.devbank.card.management.impl.mongo.document.CardTransactionDocument;
 import com.devbank.card.management.impl.mongo.document.CardTransactionLogDocument;
 import com.devbank.card.management.impl.mongo.mapper.CardMapper;
 import com.devbank.card.management.impl.mongo.mapper.CardTransactionMapper;
@@ -16,7 +14,6 @@ import com.devbank.card.management.impl.mongo.repository.CardRepository;
 import com.devbank.card.management.impl.mongo.repository.CardTransactionLogRepository;
 import com.devbank.card.management.impl.mongo.repository.CardTransactionRepository;
 import com.devbank.error.management.exception.CardNotFoundException;
-import com.devbank.error.management.exception.InsufficientBalanceException;
 import com.devbank.error.management.exception.LimitExceededException;
 import com.devbank.error.management.exception.TransactionNotAllowedException;
 import org.springframework.stereotype.Service;

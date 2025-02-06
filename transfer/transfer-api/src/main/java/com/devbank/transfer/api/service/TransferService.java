@@ -15,6 +15,6 @@ public interface TransferService {
 
     TransferDTO updateTransferStatus(String transferId, TransferStatus status); // Transfer durumunu güncelleme
 
-    public List<TransferDTO> getAllTransfers();
+    List<TransferDTO> getAllTransfers();
 }
 

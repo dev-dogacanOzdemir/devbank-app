@@ -6,7 +6,12 @@
         <artifactId>user-management</artifactId>
         <version>1.0.0</version>
     </parent>
+
+    <groupId>com.devbank</groupId>
     <artifactId>user-management-rest</artifactId>
+    <version>1.0.0</version>
+    <name>User Management REST Endpoint Module</name>
+
     <dependencies>
         <dependency>
             <groupId>com.devbank</groupId>

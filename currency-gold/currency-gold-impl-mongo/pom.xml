@@ -9,7 +9,10 @@
         <version>1.0.0</version>
     </parent>
 
+    <groupId>com.devbank</groupId>
     <artifactId>currency-gold-impl-mongo</artifactId>
+    <version>1.0.0</version>
+    <name>Currency-Gold Implementation MongoDB</name>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

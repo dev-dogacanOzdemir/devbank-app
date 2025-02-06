@@ -31,7 +31,8 @@
         <module>transfer</module>
         <module>currency-gold</module>
         <module>card-management</module>
-    </modules>
+        <module>loan-management</module>
+	</modules>
 
 	<dependencyManagement>
 		<dependencies>

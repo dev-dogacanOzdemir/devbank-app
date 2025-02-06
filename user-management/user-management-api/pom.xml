@@ -6,7 +6,12 @@
         <artifactId>user-management</artifactId>
         <version>1.0.0</version>
     </parent>
+
+    <groupId>com.devbank</groupId>
     <artifactId>user-management-api</artifactId>
+    <version>1.0.0</version>
+    <name>User Management API Module</name>
+
     <dependencies>
         <!-- Java Validation API (Optional, for input validation) -->
         <dependency>

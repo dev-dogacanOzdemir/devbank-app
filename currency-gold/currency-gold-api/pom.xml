@@ -9,7 +9,10 @@
         <version>1.0.0</version>
     </parent>
 
+    <groupId>com.devbank</groupId>
     <artifactId>currency-gold-api</artifactId>
+    <version>1.0.0</version>
+    <name>Currency-Gold API Module</name>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

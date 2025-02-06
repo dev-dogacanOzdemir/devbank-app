@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -114,4 +115,48 @@ public class CardServiceImpl implements CardService {
             return cardMapper.toDTO(cardRepository.save(card));
         }).orElseThrow(() -> new CardNotFoundException("Card not found: " + cardId));
     }
+
+    @Override
+    public List<CardDTO> getAllCards() {
+        return cardRepository.findAll().stream().map(cardMapper::toDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteCard(String cardId) {
+        cardRepository.deleteById(cardId);
+    }
+
+    @Override
+    public CardDTO updateCard(String cardId, CardDTO updatedCard) {
+
+        Optional<CardDocument> optionalCard = cardRepository.findById(cardId);
+
+        if (optionalCard.isEmpty()) {
+            throw new RuntimeException("Card not found with ID: " + cardId);
+        }
+
+        CardDocument existingCard = optionalCard.get();
+
+        // Güncellenebilir alanlar
+        existingCard.setCardType(updatedCard.getCardType());
+        existingCard.setStatus(updatedCard.getStatus());
+        existingCard.setExpirationDate(updatedCard.getExpirationDate());
+        existingCard.setCreditLimit(updatedCard.getCreditLimit());
+        existingCard.setBalance(updatedCard.getBalance());
+
+        CardDocument savedCard = cardRepository.save(existingCard);
+        return new CardDTO(
+                savedCard.getId(),
+                savedCard.getUserId(),
+                savedCard.getAccountId(),
+                savedCard.getCardNumber(),
+                savedCard.getCardType(),
+                savedCard.getStatus(),
+                savedCard.getCreditLimit(),
+                savedCard.getBalance(),
+                savedCard.getExpirationDate()
+        );
+
+    }
+
 }

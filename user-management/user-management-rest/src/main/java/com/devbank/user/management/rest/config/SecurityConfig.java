@@ -3,6 +3,7 @@ package com.devbank.user.management.rest.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,8 +42,18 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/transfers/{transferId}/status"
                         ).hasAnyAuthority("ADMIN")
+                        // Kartlar
                         .requestMatchers("/api/cards/create", "/api/cards/update-status", "/api/cards/update-limit").hasAuthority("ADMIN")
-                        .requestMatchers("/api/cards/get/{cardId}", "/api/cards/user/{userId}", "/api/cards/{cardId}/transactions").hasAnyAuthority("CUSTOMER", "ADMIN")
+                        .requestMatchers("/api/cards/{cardId}", "/api/cards/user/{userId}", "/api/cards/{cardId}/transactions").hasAnyAuthority("CUSTOMER", "ADMIN")
+//                        // Kredi
+//                        .requestMatchers(HttpMethod.POST, "/api/loans/apply").hasAuthority("CUSTOMER")
+//                        .requestMatchers(HttpMethod.PUT, "/api/loans/{loanId}/approve").hasAnyAuthority("ADMIN", "USER")
+//                        .requestMatchers(HttpMethod.PUT, "/api/loans/{loanId}/reject").hasAnyAuthority("ADMIN", "USER")
+//                        .requestMatchers(HttpMethod.GET, "/api/loans/customer/{customerId}").hasAuthority("CUSTOMER")
+//                        .requestMatchers(HttpMethod.GET, "/api/loans/pending").hasAnyAuthority("ADMIN", "USER")
+//                        .requestMatchers(HttpMethod.GET, "/api/loans/{loanId}").hasAnyAuthority("ADMIN", "USER", "CUSTOMER")
+//                        .requestMatchers(HttpMethod.POST, "/api/loans/{loanId}/pay").hasAuthority("CUSTOMER")
+//                        .requestMatchers(HttpMethod.GET, "/api/loans/{loanId}/payment-history").hasAuthority("CUSTOMER")
                         .anyRequest().authenticated() // Diğer istekler için doğrulama iste
                 );
         System.out.println("Security Config intilized");

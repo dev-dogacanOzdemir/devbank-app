@@ -6,7 +6,12 @@
         <artifactId>transfer</artifactId>
         <version>1.0.0</version>
     </parent>
+
+    <groupId>com.devbank</groupId>
     <artifactId>transfer-impl-mongo</artifactId>
+    <version>1.0.0</version>
+    <name>Transfer Implementation MongoDB</name>
+
     <dependencies>
         <!-- Dependencies for MongoDB -->
         <dependency>
